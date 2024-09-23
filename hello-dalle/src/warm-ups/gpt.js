@@ -9,7 +9,8 @@ const question = await promptGPT(`Hello, GPT! This user has prompted the folling
 
 const expanded = await ask(question);
 
-const response = await promptDalle(`Please draw ${prompt}, taking the following into consideration: ${expanded}`);
+const response = await promptDalle(`Please draw ${prompt}. 
+    Keep in mind the user was asked a follow up question, which was: ${question}. The user's answer was ${expanded}`);
 
 say("");
 say("URL");
