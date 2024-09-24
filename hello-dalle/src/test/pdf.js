@@ -47,10 +47,10 @@ async function createPDF(pngUrl, pngText){
 
 
     const pdfBytes = await pdfDoc.save();
-    await Deno.writeFile('create.pdf', pdfBytes);
+    await Deno.writeFile('story.pdf', pdfBytes);
 
   
-    console.log('PDF file written to create.pdf'); 
+    console.log('PDF file written to story.pdf'); 
         
     }
 
