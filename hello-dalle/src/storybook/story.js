@@ -55,12 +55,17 @@ say("Done!");
 
 async function createStory() {
   const charName = await ask("What is the name of the main character?");
-  const charKind = await ask("Are they animal or human? If they're an animal, what animal are they?");
+  const charKind = await ask(
+    "Are they animal or human? If they're an animal, what animal are they?"
+  );
   const charPersonality = await ask("What is their personality?");
   const setting = await ask("What is the setting of the story?");
-  const considerations = await ask("Is there anything else you would like the AI to consider when creating the story?");
-  const style = await ask("What art style would you like your illustrations to be?");
-
+  const considerations = await ask(
+    "Is there anything else you would like the AI to consider when creating the story?"
+  );
+  const style = await ask(
+    "What art style would you like your illustrations to be?"
+  );
 
   const paragraphPrompt = await promptGPT(
     `I am writing a children story book about a ${charPersonality} ${charKind} named ${charName}. 
@@ -140,8 +145,8 @@ async function createImage(imagePrompt) {
   const result = await fal.subscribe("fal-ai/flux", {
     input: {
       prompt: imagePrompt,
-    //   "image_size": "square_hd",
-    //   num_inference_steps: "4", //low quality
+      //   "image_size": "square_hd",
+      //   num_inference_steps: "4", //low quality
       num_images: 1,
       // enable_safety_checker: true,
       // seed: 1337,
@@ -219,14 +224,13 @@ async function createCover(pdfDoc, storyTitle, pngUrl) {
     x: page.getWidth() / 2 - textWidth / 2,
     y: page.getHeight() - 6 * fontSize,
     size: fontSize,
-    font: font
+    font: font,
   });
 }
 
 async function createPDF(storyTitle) {
   await Deno.mkdir(`stories/${storyTitle}`, { recursive: true });
   await Deno.mkdir(`stories/${storyTitle}/images`, { recursive: true });
-
 
   return await PDFDocument.create();
 }
@@ -248,13 +252,12 @@ async function saveJSON(
     numPages = stories_arr[index].numPages + 1;
     textData = `${stories_arr[index].text} Page ${numPages}: ${storyText}`;
     promptData = `${stories_arr[index].prompts} Page ${numPages}: ${imagePrompt}`;
-
   }
   stories_arr[index] = {
     title: storyTitle,
     text: textData,
     numPages: numPages,
-    prompts: promptData
+    prompts: promptData,
   };
   jsonFile.stories = stories_arr;
   try {
@@ -264,9 +267,12 @@ async function saveJSON(
   }
 }
 
-async function saveImage(pngUrl, storyTitle, pageNum){
-    const pngImageBytes = await fetch(pngUrl).then((res) => res.arrayBuffer());
-    await Deno.writeFile(`./stories/${storyTitle}/images/image${pageNum}.png`, new Uint8Array(pngImageBytes));
+async function saveImage(pngUrl, storyTitle, pageNum) {
+  const pngImageBytes = await fetch(pngUrl).then((res) => res.arrayBuffer());
+  await Deno.writeFile(
+    `./stories/${storyTitle}/images/image${pageNum}.png`,
+    new Uint8Array(pngImageBytes)
+  );
 }
 
 async function fetchPDF(storyTitle) {
