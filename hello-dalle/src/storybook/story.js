@@ -13,6 +13,7 @@ import { LogLevel, setLogLevel } from "../shared/logger.ts";
 
 setLogLevel(LogLevel.Debug);
 
+say("");
 say("Hello! I am your story book creator.");
 say("You currently have the following stories saved:");
 say("");
@@ -142,8 +143,8 @@ async function createImage(imagePrompt) {
     //   "image_size": "square_hd",
     //   num_inference_steps: "4", //low quality
       num_images: 1,
-      enable_safety_checker: true,
-      seed: 1337,
+      // enable_safety_checker: true,
+      // seed: 1337,
     },
   });
   return result.images[0].url;
