@@ -3,9 +3,9 @@
  * Dall•e and showing the results.
  */
 
-import { say } from "../shared/cli.ts";
-import { promptDalle } from "../shared/openai.ts";
-import { LogLevel, setLogLevel } from "../shared/logger.ts";
+import { say } from "../../../shared/cli.ts";
+import { promptDalle } from "../../../shared/openai.ts";
+import { LogLevel, setLogLevel } from "../../../shared/logger.ts";
 setLogLevel(LogLevel.Debug);
 
 // sent prompt to gpt and relay response

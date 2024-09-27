@@ -3,8 +3,8 @@
  * and uses theLLM to generate a limerick about the user.
  */
 
-import { promptGPT } from "../shared/openai.ts";
-import { ask, say } from "../shared/cli.ts";
+import { promptGPT } from "../../../shared/openai.ts";
+import { ask, say } from "../../../shared/cli.ts";
 
 // prompt user for name and hometown
 const name = await ask("What is your name?");

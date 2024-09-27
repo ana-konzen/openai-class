@@ -1,5 +1,5 @@
-import { ask, say } from "../shared/cli.ts";
-import { promptDalle } from "../shared/openai.ts";
+import { ask, say } from "../../../shared/cli.ts";
+import { promptDalle } from "../../../shared/openai.ts";
 
 const animal = await ask("Tell me an animal.");
 

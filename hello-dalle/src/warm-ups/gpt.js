@@ -1,5 +1,5 @@
-import { ask, say } from "../shared/cli.ts";
-import { promptDalle, promptGPT } from "../shared/openai.ts";
+import { ask, say } from "../../../shared/cli.ts";
+import { promptDalle, promptGPT } from "../../../shared/openai.ts";
 
 const prompt = await ask("What do you want DALLE to draw?");
 

@@ -3,8 +3,8 @@
  * has on their pantry (pantry.txt)
  */
 
-import { ask, say } from "../shared/cli.ts";
-import { promptGPT } from "../shared/openai.ts";
+import { ask, say } from "../../../shared/cli.ts";
+import { promptGPT } from "../../../shared/openai.ts";
 
 let pantry = await Deno.readTextFile("pantry.txt");
 let shopList = await Deno.readTextFile("shopping-list.txt");

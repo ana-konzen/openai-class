@@ -3,8 +3,8 @@
  * and relays the response.
  */
 
-import { ask, say } from "../shared/cli.ts";
-import { promptGPT } from "../shared/openai.ts";
+import { ask, say } from "../../../shared/cli.ts";
+import { promptGPT } from "../../../shared/openai.ts";
 
 const question = await ask("What do you want to ask? ");
 

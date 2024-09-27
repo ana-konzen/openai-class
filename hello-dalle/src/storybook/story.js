@@ -5,11 +5,11 @@ import {
 } from "https://cdn.skypack.dev/pdf-lib@^1.11.1?dts";
 
 import * as fal from "npm:@fal-ai/serverless-client";
-import { apiKey } from "../shared/falai.ts";
-import { promptGPT } from "../shared/openai.ts";
-import { ask, say } from "../shared/cli.ts";
+import { apiKey } from "../../../shared/falai.ts";
+import { promptGPT } from "../../../shared/openai.ts";
+import { ask, say } from "../../../shared/cli.ts";
 
-import { LogLevel, setLogLevel } from "../shared/logger.ts";
+import { LogLevel, setLogLevel } from "../../../shared/logger.ts";
 
 setLogLevel(LogLevel.Debug);
 

@@ -1,8 +1,8 @@
 import * as fal from "npm:@fal-ai/serverless-client";
-import * as log from "../shared/logger.ts";
-import {apiKey} from "../shared/falai.ts";
-import { promptGPT } from "../shared/openai.ts";
-import { ask, say } from "../shared/cli.ts";
+import * as log from "../../../shared/logger.ts";
+import {apiKey} from "../../../shared/falai.ts";
+import { promptGPT } from "../../../shared/openai.ts";
+import { ask, say } from "../../../shared/cli.ts";
 
 
 

@@ -3,8 +3,8 @@
  * and relays the response.
  */
 
-import { ask, say } from "../shared/cli.ts";
-import { promptDalle } from "../shared/openai.ts";
+import { ask, say } from "../../../shared/cli.ts";
+import { promptDalle } from "../../../shared/openai.ts";
 
 const userPrompt = await ask("What do you want from Dall•e?");
 

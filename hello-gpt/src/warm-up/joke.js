@@ -1,5 +1,5 @@
-import { promptGPT } from "../shared/openai.ts"
-import { ask, say} from "../shared/cli.ts"
+import { promptGPT } from "../../../shared/openai.ts"
+import { ask, say} from "../../../shared/cli.ts"
 
 const subject = await ask("Tell me a subject for a light bulb joke.");
 
