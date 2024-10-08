@@ -6,6 +6,7 @@ import { gpt } from "./openai.ts"; //GPT util library by Justin Bakse
 import ansiEscapes from "npm:ansi-escapes"; //library of ansiEscapes to manipulate the terminal
 import * as process from "node:process"; //Node module to control current Node process and create Streams
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts"; //for text colors, from Cliffy
+import { writeMessage } from "./components.js";
 
 export async function createInitialMessage(gameInfo, numChambers) {
   const response = await gpt({
@@ -348,11 +349,4 @@ export async function createMessage(
     { role: "user", content: "Hello, who are you?" },
   ];
   return message;
-}
-
-export function writeMessage(message, y = 2) {
-  process.stdout.write(ansiEscapes.cursorTo(0, y));
-  process.stdout.write(ansiEscapes.eraseLine);
-  console.log(message);
-  process.stdout.write(ansiEscapes.cursorTo(0, 0));
 }

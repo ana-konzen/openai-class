@@ -1,61 +1,61 @@
 {
-  "setting": "The game is set within a sprawling, ancient, and mystical library known for hiding countless secrets from different realms and times. Rumor has it that hidden deep within its stone walls is a forbidden book penned by a primordial mage whose knowledge could grant its reader limitless wisdom and power. Each chamber in this labyrinthine library is enchanted to test the ingenuity and wit of any who dare to unravel the mystery and claim the prize.",
-  "mystery": "An ancient spell cast a long time ago is causing a slow decay of reality, where dreams and nightmares start to merge into the world, threatening existence. The mystery involves unraveling this spell and finding out who actually authored it long ago — and why. Each character in the chambers holds fragments of the truth about the origins of this spell, who cast it, and how it can be undone.",
-  "finalPrize": "The final prize is the Forbidden Tome of Eternity, a book that contains the true name of the primordial mage and the spells needed to both harness and reverse the spell’s effects, restoring balance to the world.",
+  "setting": "In the secluded, dense woods of Eldoria, lies an ancient labyrinth rumored to have been built by a long-lost civilization. The labyrinth consists of cryptic paths leading to hidden chambers, each containing a guardian character shrouded in mystery. Legends speak of a grand treasure enclosed within the depths of the labyrinth, sparking curious adventurers to unravel its secrets.",
+  "mystery": "The labyrinth was constructed to protect the essence of Eldoria, a mystical gem said to bind the energy of life itself. However, over centuries, the knowledge of its exact location and the gem's power have been lost to time. The player must piece together the fragmented history and significance of the gem by talking to the characters and understanding their cryptic clues, revealing the path to preserve Eldoria’s essence and prevent the kingdom from fading into oblivion.",
+  "finalPrize": "The Essence of Eternium, a radiant gem that holds the life force of the kingdom, pulsating with vibrant energy.",
   "chambers": [
     {
-      "name": "Chamber of the Whispering Shadows",
+      "name": "Chamber of Forgotten Vows",
       "difficulty": 1,
       "character": {
-        "name": "Lirael the Librarian",
-        "role": "Custodian of the first layer of the library's secrets.",
-        "alignment": "Neutral Good",
+        "name": "Eldric",
+        "role": "A former guard of the labyrinth, now a confused warden.",
+        "alignment": "Neutral",
         "initialTrustLevel": 7,
-        "keyInteraction": "Lirael will ask the player about their perspective on the importance of knowledge. The player must express an understanding of knowledge as a tool for both creation and destruction."
+        "keyInteraction": "Eldric, holding remnants of his duty-bound past, asks about the trade routes connecting the kingdom. Correctly recalling his directions from his patrols gives you the key."
       }
     },
     {
-      "name": "Chamber of Riddles",
+      "name": "Chamber of Echoing Whispers",
       "difficulty": 2,
       "character": {
-        "name": "Gideon the Cryptic",
-        "role": "Guardian of the Riddles and Keeper of Half-Truths.",
-        "alignment": "Chaotic Neutral",
-        "initialTrustLevel": 5,
-        "keyInteraction": "Gideon will share with the player a riddle tied to the history of the library. The player's answer must reflect insights gathered from Lirael about knowledge's dual nature to show their understanding."
+        "name": "Mirra",
+        "role": "A historian obsessed with the labyrinth's history.",
+        "alignment": "Neutral",
+        "initialTrustLevel": 6,
+        "keyInteraction": "Mirra requires the player to recount the tale told by Eldric about the legendary merchant who once traded secrets, verifying if the story aligns with her historical parchments."
       }
     },
     {
-      "name": "Chamber of Echoes",
+      "name": "Chamber of Shimmering Truths",
       "difficulty": 3,
       "character": {
-        "name": "Mira the Muse",
-        "role": "Lorekeeper of the Past and One Who Remembers.",
-        "alignment": "Lawful Neutral",
-        "initialTrustLevel": 4,
-        "keyInteraction": "Mira will ask the player to recount themes from past visions (like dreams) that reflect the conflict and peace seen in the world. This is based on the library lore and needs to reflect echoes from the first two chambers."
+        "name": "Sylvan",
+        "role": "A wayward sage with knowledge of spells woven into the maze.",
+        "alignment": "Neutral",
+        "initialTrustLevel": 5,
+        "keyInteraction": "Sylvan needs to hear a parable about choices and destinies, tying it to a riddle Eldric hinted at, which only a keen listener would decipher."
       }
     },
     {
-      "name": "Chamber of Secrets",
+      "name": "Chamber of Guiding Stars",
       "difficulty": 4,
       "character": {
-        "name": "Faelan the Watcher",
-        "role": "Seer of Forgotten Times and the future.",
-        "alignment": "Neutral Evil",
-        "initialTrustLevel": 3,
-        "keyInteraction": "Faelan will challenge the player to recount a specific tale of conflict within the library, ensuring they touch upon details learned from Gideon and Mira. This will prove if the player has untangled enough truths about past betrayals."
+        "name": "Thalia",
+        "role": "Keeper of ancient star maps related to the labyrinth's creation.",
+        "alignment": "Good",
+        "initialTrustLevel": 4,
+        "keyInteraction": "She challenges the player to describe the star constellations crucial to navigating the labyrinth's creation cycle, a task only ventured upon by recalling Mirra's subtle clues."
       }
     },
     {
-      "name": "Chamber of the Starlit Archive",
+      "name": "Chamber of the Eternal Cipher",
       "difficulty": 5,
       "character": {
-        "name": "Selene the Wise",
-        "role": "One of the ancient counsel members who witnessed the spell's casting.",
-        "alignment": "True Neutral",
-        "initialTrustLevel": 2,
-        "keyInteraction": "Selene asks the player to articulate the ultimate lesson learned throughout the chambers — the balance between wisdom and power. The response should integrate knowledge from all previous interactions, showing an understanding of hope, fear, and truth as shared by those encountered."
+        "name": "Orin",
+        "role": "The enigmatic gatekeeper of the final chamber.",
+        "alignment": "Good",
+        "initialTrustLevel": 3,
+        "keyInteraction": "Orin demands an account of the labyrinth's binding spells and their origins, deciphering a code from words shared by Sylvan and confirming with constellations learned from Thalia, granting access to the ultimate treasure."
       }
     }
   ]

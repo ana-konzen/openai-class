@@ -15,12 +15,16 @@ import {
   createDialogue,
   createFinalMessage,
   createInitialMessage,
-  writeMessage,
 } from "./chats.js"; //ChatGPT prompts and other utility functions for the game
 
 import { randomInt, splitSentences } from "./util.js";
 
-import { Chamber } from "./chamber.js";
+import {
+  Chamber,
+  createNarrativeBox,
+  createDialogueBox,
+  writeMessage,
+} from "./components.js";
 
 const numChambers = 5;
 const chambers = [];
@@ -315,41 +319,6 @@ function addLevel() {
     level = numChambers - 1;
     finalChamber = true;
   }
-}
-
-function createNarrativeBox(arr, dialogueIndex) {
-  process.stdout.write(ansiEscapes.cursorTo(0, 4));
-  console.log(
-    boxen(`${arr[dialogueIndex]}\n\n${dialogueIndex + 1}/${arr.length}`, {
-      width: 50,
-      height: 20,
-      padding: 1,
-      borderStyle: "double",
-      float: "center",
-      title: "Narrator",
-      borderColor: "#345717",
-    })
-  );
-  process.stdout.write(ansiEscapes.cursorTo(0, 0));
-}
-
-function createDialogueBox(arr, dialogueIndex, currentChamber, character) {
-  process.stdout.write(ansiEscapes.cursorTo(0, 0));
-  console.log(
-    boxen(`${arr[dialogueIndex]}\n\n${dialogueIndex + 1}/${arr.length}`, {
-      padding: 1,
-      width: 30,
-      height: 20,
-      borderStyle: "double",
-      title: character.name,
-      margin: {
-        top: 21,
-        left: currentChamber.x,
-      },
-      borderStyle: "singleDouble",
-    })
-  );
-  process.stdout.write(ansiEscapes.cursorTo(0, 0));
 }
 
 function initializeGame() {

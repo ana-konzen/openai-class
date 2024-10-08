@@ -42,3 +42,50 @@ export class Chamber {
     process.stdout.write(ansiEscapes.cursorTo(0, 0));
   }
 }
+
+export function createNarrativeBox(arr, dialogueIndex) {
+  process.stdout.write(ansiEscapes.cursorTo(0, 4));
+  console.log(
+    boxen(`${arr[dialogueIndex]}\n\n${dialogueIndex + 1}/${arr.length}`, {
+      width: 50,
+      height: 20,
+      padding: 1,
+      borderStyle: "double",
+      float: "center",
+      title: "Narrator",
+      borderColor: "#345717",
+    })
+  );
+  process.stdout.write(ansiEscapes.cursorTo(0, 0));
+}
+
+export function createDialogueBox(
+  arr,
+  dialogueIndex,
+  currentChamber,
+  character
+) {
+  process.stdout.write(ansiEscapes.cursorTo(0, 0));
+  console.log(
+    boxen(`${arr[dialogueIndex]}\n\n${dialogueIndex + 1}/${arr.length}`, {
+      padding: 1,
+      width: 30,
+      height: 20,
+      borderStyle: "double",
+      title: character.name,
+      margin: {
+        top: 21,
+        left: currentChamber.x,
+      },
+      borderStyle: "singleDouble",
+    })
+  );
+  process.stdout.write(ansiEscapes.cursorTo(0, 0));
+}
+
+export function writeMessage(message, y = 2) {
+  process.stdout.write(ansiEscapes.cursorTo(0, y));
+  process.stdout.write(ansiEscapes.eraseLine);
+  console.log(message);
+  process.stdout.write(ansiEscapes.cursorTo(0, 0));
+}
