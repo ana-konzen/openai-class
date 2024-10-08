@@ -13,8 +13,8 @@ import {
   createGame,
   createMessage,
   createDialogue,
-  createEpilogue,
-  createPrologue,
+  createFinalMessage,
+  createInitialMessage,
 } from "./chats.js"; //ChatGPT prompts and other utility functions for the game
 
 import { randomInt, splitSentences } from "./util.js";
@@ -39,23 +39,21 @@ let dialogue;
 
 let talkMenu = false;
 let doorLocked = true;
-let epilogue;
+let finalMessage;
 let finalChamber = false;
 let firstChamber = true;
 
-const jsonStr = await Deno.readTextFile("game_info.json");
-
-// const gameInfo = await createGame(numChambers);
-const gameInfo = JSON.parse(jsonStr);
+const gameInfo = await createGame(numChambers);
 
 const chambersInfo = gameInfo.chambers;
 
-// const prologue = await createPrologue(gameInfo, numChambers);
-const prologue = `${gameInfo.setting}  ${gameInfo.mystery}  ${gameInfo.finalPrize}`;
-const prologueSentences = splitSentences(prologue);
+let firstMessage = await createInitialMessage(gameInfo, numChambers);
+let firstSentences = splitSentences(firstMessage);
 
 chatHistory.push({
-  prologue: prologue,
+  chamber: "introduction",
+  character: "the narrator",
+  chat: firstMessage,
 });
 
 let messages = await createMessage(
@@ -89,14 +87,14 @@ process.stdin.on("keypress", async (str, key) => {
   if (firstChamber) {
     process.stdout.write(ansiEscapes.cursorTo(0, 4));
 
-    if (key.name === "right" && dialogueIndex < prologueSentences.length - 1) {
+    if (key.name === "right" && dialogueIndex < firstSentences.length - 1) {
       dialogueIndex++;
     }
     if (key.name === "left" && dialogueIndex > 0) {
       dialogueIndex--;
     }
-    createNarrativeBox(prologueSentences, dialogueIndex);
-    if (dialogueIndex === prologueSentences.length - 1) {
+    createNarrativeBox(firstSentences, dialogueIndex);
+    if (dialogueIndex === firstSentences.length - 1) {
       process.stdout.write(ansiEscapes.cursorTo(0, 25));
       console.log(
         boxen("press 'space' to start your adventure!", {
@@ -189,12 +187,12 @@ process.stdin.on("keypress", async (str, key) => {
               process.stdout.write(
                 ansiEscapes.eraseScreen + ansiEscapes.cursorHide
               );
-              epilogue = await createEpilogue(
+              finalMessage = await createFinalMessage(
                 gameInfo,
                 chatHistory,
                 numChambers
               );
-              chatHistory.push({ epilogue: epilogue });
+              chatHistory.push({ finalMessage: finalMessage });
               dialogueIndex = 0;
               talkMenu = true;
             }
@@ -286,17 +284,14 @@ process.stdin.on("keypress", async (str, key) => {
 
     if (talkMenu && finalChamber) {
       process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
-      let epilogueSentences = splitSentences(epilogue);
-      if (
-        key.name === "right" &&
-        dialogueIndex < epilogueSentences.length - 1
-      ) {
+      let finalSentences = splitSentences(finalMessage);
+      if (key.name === "right" && dialogueIndex < finalSentences.length - 1) {
         dialogueIndex++;
       }
       if (key.name === "left" && dialogueIndex > 0) {
         dialogueIndex--;
       }
-      createNarrativeBox(epilogueSentences, dialogueIndex);
+      createNarrativeBox(finalSentences, dialogueIndex);
     }
   }
   if (key.ctrl === true && key.name === "c") {
@@ -338,7 +333,7 @@ function initializeGame() {
 
   process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
 
-  createNarrativeBox(prologueSentences, 0);
+  createNarrativeBox(firstSentences, 0);
 
   // process.stdout.write(ansiEscapes.cursorTo(horMov, verMov));
   // writeMainCharacter();
