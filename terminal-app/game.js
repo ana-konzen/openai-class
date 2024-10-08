@@ -3,7 +3,6 @@
  * A dungeon-crawler RPG game in your computer's terminal, using ChatGPT.
  */
 
-import ansiEscapes from "npm:ansi-escapes"; //library of ansiEscapes to manipulate the terminal
 import * as process from "node:process"; //Node module to control current Node process and create Streams
 import boxen from "npm:boxen@7.1.1"; //library for terminal boxes
 import * as readline from "node:readline"; //Node module to read data from a Stream
@@ -17,22 +16,24 @@ import {
   createPrologue,
 } from "./chats.js"; //ChatGPT prompts and other utility functions for the game
 
+import { randomInt, splitSentences, getPlayerOverlaps } from "./util.js";
+
 import {
-  randomInt,
-  splitSentences,
   placeAt,
   renderMainCharacter,
   showCursor,
   hideCursor,
   eraseScreen,
-} from "./util.js";
+  clearScreen,
+} from "./ansi.js";
 
 import {
-  Chamber,
   createNarrativeBox,
   createDialogueBox,
   writeMessage,
 } from "./components.js";
+
+import { Chamber } from "./chamber.js";
 
 const numChambers = 5;
 const chambers = [];
@@ -44,6 +45,7 @@ let playerY = 0;
 let dialogueIndex = 0;
 
 let dialogue;
+let playerOverlaps;
 
 let talkMenu = false;
 let doorLocked = true;
@@ -73,22 +75,7 @@ let messages = await createMessage(
   numChambers
 );
 
-let offset = 0;
-for (let i = 0; i < numChambers; i++) {
-  let w = randomInt(6, 15) * 2;
-  let newChamber = new Chamber(
-    w,
-    randomInt(10, 12),
-    i + offset,
-    randomInt(5, 8)
-  );
-  chambers.push(newChamber);
-  if (i > 0) {
-    newChamber.entrance = true;
-    newChamber.entranceY = chambers[i - 1].exitY;
-  }
-  offset += w;
-}
+createChambers();
 
 initializeGame();
 
@@ -124,9 +111,10 @@ process.stdin.on("keypress", async (str, key) => {
     }
   } else {
     let currentChamber = chambers[level];
+    playerOverlaps = getPlayerOverlaps(currentChamber, playerX, playerY);
     let character = chambersInfo[level].character;
     let trust = character.trustLevel;
-    process.stdout.write(ansiEscapes.clearScreen);
+    clearScreen();
     writeMessage(`${level + 1}: ${chambersInfo[level].name}`);
     if (key.name === "c" || trust >= 10) {
       writeMessage(colors.green("The character gave you a key!"), 4);
@@ -134,42 +122,20 @@ process.stdin.on("keypress", async (str, key) => {
     }
     if (!talkMenu) {
       if (key.name === "d" || key.name === "right") {
-        if (playerX < currentChamber.x + currentChamber.w - 3) {
-          if (
-            playerX !== currentChamber.npcX - 2 ||
-            playerY !== currentChamber.npcY
-          )
-            playerX += 2;
-        }
+        if (!playerOverlaps.wall.right && !playerOverlaps.npc.right)
+          playerX += 2;
       }
 
       if (key.name === "a" || key.name === "left") {
-        if (playerX > currentChamber.x + 1) {
-          if (
-            playerX !== currentChamber.npcX + 1 ||
-            playerY !== currentChamber.npcY
-          )
-            playerX -= 2;
-        }
+        if (!playerOverlaps.wall.left && !playerOverlaps.npc.left) playerX -= 2;
       }
 
       if (key.name === "s" || key.name === "down") {
-        if (playerY < currentChamber.y + currentChamber.h - 2) {
-          if (
-            playerY !== currentChamber.npcY - 1 ||
-            playerX !== currentChamber.npcX
-          )
-            playerY++;
-        }
+        if (!playerOverlaps.wall.bottom && !playerOverlaps.npc.bottom)
+          playerY++;
       }
       if (key.name === "w" || key.name === "up") {
-        if (playerY > currentChamber.y + 1) {
-          if (
-            playerY !== currentChamber.npcY + 1 ||
-            playerX !== currentChamber.npcX
-          )
-            playerY--;
-        }
+        if (!playerOverlaps.wall.top && !playerOverlaps.npc.top) playerY--;
       }
       if (
         playerY === currentChamber.exitY &&
@@ -337,4 +303,23 @@ function initializeGame() {
   hideCursor();
 
   createNarrativeBox(prologueSentences, 0);
+}
+
+function createChambers() {
+  let offset = 0;
+  for (let i = 0; i < numChambers; i++) {
+    let w = randomInt(6, 15) * 2;
+    let newChamber = new Chamber(
+      w,
+      randomInt(10, 12),
+      i + offset,
+      randomInt(5, 8)
+    );
+    chambers.push(newChamber);
+    if (i > 0) {
+      newChamber.entrance = true;
+      newChamber.entranceY = chambers[i - 1].exitY;
+    }
+    offset += w;
+  }
 }
