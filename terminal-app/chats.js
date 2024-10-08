@@ -2,12 +2,12 @@
  * by Ana Konzen
  */
 
-import { gpt } from "./openai.ts"; //GPT util functions by Justin Bakse
-import ansiEscapes from "npm:ansi-escapes";
-import * as process from "node:process";
-import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts";
+import { gpt } from "./openai.ts"; //GPT util library by Justin Bakse
+import ansiEscapes from "npm:ansi-escapes"; //library of ansiEscapes to manipulate the terminal
+import * as process from "node:process"; //Node module to control current Node process and create Streams
+import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts"; //for text colors, from Cliffy
 
-export async function createInitialMessage(gameInfo) {
+export async function createInitialMessage(gameInfo, numChambers) {
   const response = await gpt({
     messages: [
       {
@@ -15,14 +15,14 @@ export async function createInitialMessage(gameInfo) {
         content: `
           You are the narrator of a dungeon-crawler game in the computer terminal. 
           The game is going to be a mystery game and dialogue-based. 
-          The player will enter a room that has one NPC. It's the player's job to interact with the NPC and find out about the game's mystery. 
-          The player needs to answer the NPC in a specific way so they can give the player a key to unlock the door to the next room.
-          The rooms are empty. The player can only interact with the NPC. The player cannot leave the room until they receive a key. Each interaction should be meaningful.
-          The dungeon has 5 total rooms. When the player unlocks the 5th room, they will encounter the final prize and win the game.
-          The NPCs know each other and will take into consideration what has been said in previous rooms, and will also ask for information given to the player by other NPCs.
-          Here's the game's setting: ${gameInfo.parsed.setting}.
-          The overall mystery of the game: ${gameInfo.parsed.mystery}.
-          The final prize of the game: ${gameInfo.parsed.finalPrize}.
+          The player will enter a chamber that has one NPC. It's the player's job to interact with the NPC and find out about the game's mystery. 
+          The player needs to answer the NPC in a specific way so they can give the player a key to unlock the door to the next chamber.
+          The chambers are empty. The player can only interact with the NPC. The player cannot leave the chamber until they receive a key. Each interaction should be meaningful.
+          The dungeon has ${numChambers} total chambers. When the player unlocks the 5th chamber, they will encounter the final prize and win the game.
+          The NPCs know each other and will take into consideration what has been said in previous chambers, and will also ask for information given to the player by other NPCs.
+          Here's the game's setting: ${gameInfo.setting}.
+          The overall mystery of the game: ${gameInfo.mystery}.
+          The final prize of the game: ${gameInfo.finalPrize}.
           Your role is to introduce the game to the player in 200 - 250 words. Explain what the player needs to do.
           Basically, narrate the beginning of the game.`,
       },
@@ -37,17 +37,17 @@ export async function createInitialMessage(gameInfo) {
   return response.content;
 }
 
-export async function createFinalMessage(gameInfo, chatHistory) {
+export async function createFinalMessage(gameInfo, chatHistory, numChambers) {
   const response = await gpt({
     messages: [
       {
         role: "system",
         content: `
           You are the narrator of a dungeon-crawler game in the computer terminal. Here's the information you need about the game:
-          Setting: ${gameInfo.parsed.setting}.
-          The overall mystery of the game: ${gameInfo.parsed.mystery}.
-          The final prize of the game: ${gameInfo.parsed.finalPrize}.
-          The player visited 5 chambers. Here is the conversation history: ${chatHistory}.
+          Setting: ${gameInfo.setting}.
+          The overall mystery of the game: ${gameInfo.mystery}.
+          The final prize of the game: ${gameInfo.finalPrize}.
+          The player visited ${numChambers} chambers. Here is the conversation history: ${chatHistory}.
           Your role is to give the final prize to the player and explain it to them. 
           Narrate what the prize is and what happened in 200 - 250 words, based on the conversation history and the player's actions and intentions.
           Consider that actions have consequences.`,
@@ -65,8 +65,8 @@ export async function createFinalMessage(gameInfo, chatHistory) {
   return response.content;
 }
 
-export async function createDialogue(room, messages, trust, chatHistory) {
-  const character = room.npc;
+export async function createDialogue(chamber, messages, trust, chatHistory) {
+  const character = chamber.npc;
   const messageHis = [];
   if (character.trustLevel === undefined)
     character.trustLevel = character.initialTrustLevel;
@@ -186,7 +186,7 @@ export async function createDialogue(room, messages, trust, chatHistory) {
     }
   }
   chatHistory.push({
-    room: room.name,
+    chamber: chamber.name,
     npc: character.name,
     chat: messageHis,
   });
@@ -195,7 +195,7 @@ export async function createDialogue(room, messages, trust, chatHistory) {
   return response.content;
 }
 
-export async function createGame() {
+export async function createGame(numChambers) {
   const result = await gpt({
     model: "gpt-4o",
     messages: [
@@ -209,14 +209,14 @@ export async function createGame() {
         role: "user",
         content: `I am creating a dungeon crawler RPG game in my computer terminal. 
             The game is going to be a mystery game and dialogue-based. 
-            The player will enter a room that has one NPC. It's the player's job to interact with the NPC and find out about the game's mystery. 
-            The player needs to answer the NPC in a specific way so they can give the player a key to unlock the door to the next room.
-            The rooms are empty. The player can only interact with the NPC. The player cannot leave the room until they receive a key. Each interaction should be meaningful.
-            The dungeon has 5 total rooms. When the player unlocks the 5th room, they will encounter the final prize and win the game.
+            The player will enter a chamber that has one NPC. It's the player's job to interact with the NPC and find out about the game's mystery. 
+            The player needs to answer the NPC in a specific way so they can give the player a key to unlock the door to the next chamber.
+            The chambers are empty. The player can only interact with the NPC. The player cannot leave the chamber until they receive a key. Each interaction should be meaningful.
+            The dungeon has ${numChambers} total chambers. When the player unlocks the ${numChambers}th chamber, they will encounter the final prize and win the game.
             Please tell me what the overall setting of the game is, what the mystery is, and what the final prize is.
-            Also for each room, tell me what NPC the player will encounter, what part of the mystery they will unveil to the player, and what they need from the player to give them the key.
-            The NPCs know each other and will take into consideration what has been said in previous rooms, and will also ask for information given to the player by other NPCs.
-            The first room should be very easy and the 5th room should be hard.`,
+            Also for each chamber, tell me what NPC the player will encounter, what part of the mystery they will unveil to the player, and what they need from the player to give them the key.
+            The NPCs know each other and will take into consideration what has been said in previous chambers, and will also ask for information given to the player by other NPCs.
+            The first chamber should be very easy and the ${numChambers}th chamber should be hard.`,
       },
     ],
     max_tokens: 1600,
@@ -239,26 +239,25 @@ export async function createGame() {
               type: "string",
               description: "The final prize of the game.",
             },
-            rooms: {
+            chambers: {
               type: "array",
-              description: "The details for each of the 5 rooms.",
+              description: `The details for each of the ${numChambers} chambers.`,
               items: {
                 type: "object",
-                description: "The details of the each room.",
+                description: "The details of the each chamber.",
                 properties: {
                   name: {
                     type: "string",
-                    description: "The room's name.",
+                    description: "The chamber's name.",
                   },
                   difficulty: {
                     type: "number",
-                    description:
-                      "The difficulty level of the room, from 1 to 5.",
+                    description: `"The difficulty level of the chamber, from 1 to ${numChambers}.`,
                   },
                   npc: {
                     type: "object",
                     description:
-                      "The details about the NPC the player encounters in the room.",
+                      "The details about the NPC the player encounters in the chamber.",
                     properties: {
                       name: {
                         type: "string",
@@ -278,8 +277,8 @@ export async function createGame() {
                       },
                       keyInteraction: {
                         type: "string",
-                        description: `What the player needs from the NPC to unlock the next room. 
-                          Remember the room is empty and assume the player has no extra knowledge. 
+                        description: `What the player needs from the NPC to unlock the next chamber. 
+                          Remember the chamber is empty and assume the player has no extra knowledge. 
                           The player cannot ask other NPCs for help, they can only remember what other NPCs told them.
                           Consider the difficulty level. If it's 1, the player has no specific knowledge and has not talked to any NPCs.`,
                       },
@@ -299,7 +298,7 @@ export async function createGame() {
               },
             },
           },
-          required: ["setting", "mystery", "finalPrize", "rooms"],
+          required: ["setting", "mystery", "finalPrize", "chambers"],
           additionalProperties: false,
         },
         strict: true,
@@ -312,30 +311,35 @@ export async function createGame() {
     JSON.stringify(result.parsed, null, 2)
   );
 
-  return result;
+  return result.parsed;
 }
 
-export async function createMessage(room, gameInfo, chatHistory) {
-  const character = room.npc;
+export async function createMessage(
+  chamber,
+  gameInfo,
+  chatHistory,
+  numChambers
+) {
+  const character = chamber.npc;
   const message = [
     {
       role: "system",
       content: `You are a NPC in a dungeon-crawler, mystery game in the computer terminal. Here's the information you need about the game:
-          Setting: ${gameInfo.parsed.setting}.
-          The overall mystery of the game: ${gameInfo.parsed.mystery}.
-          Final prize of the game: ${gameInfo.parsed.finalPrize}.
-          The game has 5 chambers. You are in chamber number ${room.difficulty}, which is the ${room.name}. So you are the ${room.difficulty} the player encountered.
+          Setting: ${gameInfo.setting}.
+          The overall mystery of the game: ${gameInfo.mystery}.
+          Final prize of the game: ${gameInfo.finalPrize}.
+          The game has ${numChambers} chambers. You are in chamber number ${chamber.difficulty}, which is the ${chamber.name}. So you are the ${chamber.difficulty} the player encountered.
           The lower the chamber number is, the easier the interaction is (for example, the riddles should be easier) and the easier it is to gain the NPC's trust.
           You own the key to unlock the next chamber.
           Your name is ${character.name} and this is your role in the game: ${character.role}. Your alignment is ${character.alignment} 
           and your starting trust level with the player is ${character.trustLevel} out of 10. Your key interaction with the player is ${character.keyInteraction}.
           You will engage in a conversation with the player. Use the tools at your disposal to react to what the player has told you.
-          The player needs to answer you in specific ways in order to unlock the next room. 
+          The player needs to answer you in specific ways in order to unlock the next chamber. 
           Here is the chat history of the game: ${chatHistory}. 
-          You can take into consideration what has been said in previous rooms, and can also 
+          You can take into consideration what has been said in previous chambers, and can also 
           ask for information given to the player by other NPCs.
           The player only knows what you and other NPCs from the chat history have told them. The player has no extra knowledge.
-          The room is empty. The player can only interact with you. The player cannot leave the room until you give them the key. Each interaction should be meaningful.
+          The chamber is empty. The player can only interact with you. The player cannot leave the chamber until you give them the key. Each interaction should be meaningful.
           Once your trust level is 10, you can give the player the key so they can proceed to the next chamber.
           The very first response should be neutral. You should tell the player what you need from them.
           Your answers should be between 20 and 100 words.`,

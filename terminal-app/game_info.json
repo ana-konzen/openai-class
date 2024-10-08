@@ -1,61 +1,61 @@
 {
-  "setting": "The abandoned halls of the Astral Academy serve as the setting where ancient mysteries and secrets long forgotten dwell. Once the pinnacle of magical learning, the academy was sealed a century ago after a devastating event obscured in legend and rumors. Secluded amidst the sky-piercing peaks and enshrouded in magical mists, the dungeon promises unspoken wisdom and perilous secrets to those who dare explore its uninhabited corridors.",
-  "mystery": "The Astral Academy's mystery revolves around an enigmatic incident known as \"The Great Disappearance,\" where scholars of the academy vanished overnight, leaving behind cryptic recordings and traces of powerful, unstable magic. The player must unravel this mystery, piecing together how these scholars vanished, what magical experiment went wrong, and who was behind it all.",
-  "finalPrize": "The Tome of Enlightenment, an ancient artifact containing the lost knowledge of the astral magicians and the secret to bending reality itself.",
-  "rooms": [
+  "setting": "The game is set within the forgotten catacombs beneath the ancient city of Eldrith, a place steeped in rich history and mysterious tales of lost relics. Legends speak of a benevolent artifact hidden deep within these cryptic tunnels that has the power to alter the very fabric of reality, offering boundless wisdom and power to its possessor. The player, an adventurer curious about these legends, must navigate through a labyrinth filled with cryptic NPCs who guard the truth.",
+  "mystery": "The ultimate mystery revolves around the whereabouts and true nature of the 'Eternal Nexus,' an ancient relic believed to grant eternal knowledge and power. However, to find it, the adventurer must piece together fragmented knowledge from five guardians, each revealing parts of a cryptic prophecy. The prophecy, when complete, should reveal the identity of a mythical figure responsible for hiding the Nexus and a forgotten history that predates even the oldest records.",
+  "finalPrize": "The Eternal Nexus, an artifact that grants unprecedented wisdom and power, allowing the player to reshape reality into a paradise of their choosing.",
+  "chambers": [
     {
-      "name": "The Enchanted Foyer",
+      "name": "Chamber of Whispers",
       "difficulty": 1,
       "npc": {
-        "name": "Professor Lurm",
-        "role": "An old librarian who recorded the academy's history.",
+        "name": "Elder Varnel",
+        "role": "The Keeper of First Truths",
         "alignment": "Neutral",
-        "initialTrustLevel": 7,
-        "keyInteraction": "Engage with Professor Lurm in dialogue to learn about the academy's founding principles. Ask him about the mysterious phonograph recording that reveals who was the last scholar seen within the walls."
+        "initialTrustLevel": 8,
+        "keyInteraction": "To obtain the key, the player must express gratitude and curiosity about the ancient history of Eldrith, prompting Varnel to share the first part of the prophecy: 'In the beginning, the light was hidden in the shadow.' This knowledge confirms the existence of the Eternal Nexus."
       }
     },
     {
-      "name": "The Hall of Echoes",
+      "name": "Chamber of Echoes",
       "difficulty": 2,
       "npc": {
-        "name": "Archivist Selene",
-        "role": "Keeper of the academy's personal diaries and progress logs.",
-        "alignment": "Friendly",
+        "name": "Scribe Alyndra",
+        "role": "The Chronicler of Lost Legends",
+        "alignment": "Lawful Neutral",
         "initialTrustLevel": 6,
-        "keyInteraction": "Selene demands to know what you learned from Professor Lurm about the last seen scholar. Share specifics from Lurm's revelations and inquire about Selene's knowledge of unauthorized magical practices lingering in the diaries."
+        "keyInteraction": "Alyndra requires the player to recall the phrase shared by Elder Varnel. The player must demonstrate an understanding of its significance by contextualizing it within ancient historical events, leading Alyndra to reveal the second part of the prophecy: 'Guarded by the two-faced sentinel.'"
       }
     },
     {
-      "name": "The Alchemical Lab",
+      "name": "Chamber of Reflections",
       "difficulty": 3,
       "npc": {
-        "name": "Master Alchemist Zephyr",
-        "role": "One of the last surviving scholars who fled during \"The Great Disappearance.\"",
-        "alignment": "Cautious",
+        "name": "Mystic Kirion",
+        "role": "The Seer of Forgotten Paths",
+        "alignment": "Chaotic Good",
         "initialTrustLevel": 5,
-        "keyInteraction": "Tell Zephyr what Selene mentioned about unauthorized practices and ask if Zephyr knew about this. He will hand over useful clues regarding secret experiments if you correctly identify the discrepancies in the diary accounts from Selene."
+        "keyInteraction": "Here, Kirion will only provide a key once the player shares the insights learned from both Varnel and Alyndra, and acknowledges the importance of balance between light and shadow. In return, Kirion grants insight into the third prophecy: 'The seeker must uncover the past to find the truth.'"
       }
     },
     {
-      "name": "The Arboretum Sanctum",
+      "name": "Chamber of Shadows",
       "difficulty": 4,
       "npc": {
-        "name": "Sylvannis the Botanist",
-        "role": "Responsible for maintaining magical fauna within the academy.",
-        "alignment": "Suspicious",
+        "name": "Guardian Thalos",
+        "role": "Protector of Sacred Secrets",
+        "alignment": "Lawful Good",
         "initialTrustLevel": 4,
-        "keyInteraction": "Convey Zephyr's findings about the experimental corruption needing botanical intervention. Sylvannis requires proof of understanding the nature of these shifted plants before offering the key insights on who led the ill-fated experiment."
+        "keyInteraction": "Thalos demands the player recount all parts of the prophecy received so far. The player must persuade Thalos of their earnest quest for knowledge without ulterior motives. This earns trust and reveals the penultimate part of the prophecy: 'When the stars align, the truth shall surface.'"
       }
     },
     {
-      "name": "The Astral Observatory",
+      "name": "Chamber of Light",
       "difficulty": 5,
       "npc": {
-        "name": "Seer Astora",
-        "role": "Prophetess of the Stars, aware of the academy's ultimate fate.",
-        "alignment": "Mysterious",
+        "name": "Oracle Seraphi",
+        "role": "The Final Oracle",
+        "alignment": "True Neutral",
         "initialTrustLevel": 3,
-        "keyInteraction": "Astora seeks a recital of all truths uncovered with prior NPCs. When you successfully recount and connect all threads of the Great Disappearance—including the leader responsible—Astora will give you the key to claim the Tome of Enlightenment."
+        "keyInteraction": "Seraphi challenges the player to not only repeat the full prophecy but also to interpret its symbolism completely. Only by proving deep understanding of Eldrith's forgotten history and the moral implications tied to the Nexus can the player convince Seraphi to reveal the last line of the prophecy: 'Embrace the end and forge the beginning.' This unlocks the final chamber containing the Eternal Nexus."
       }
     }
   ]

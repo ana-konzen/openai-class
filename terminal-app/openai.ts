@@ -1,3 +1,5 @@
+//util library by Justin Bakse
+
 // Kia: library for creating spinners
 import Kia from "https://deno.land/x/kia@0.4.1/mod.ts";
 
