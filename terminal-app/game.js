@@ -17,7 +17,15 @@ import {
   createPrologue,
 } from "./chats.js"; //ChatGPT prompts and other utility functions for the game
 
-import { randomInt, splitSentences } from "./util.js";
+import {
+  randomInt,
+  splitSentences,
+  placeAt,
+  renderMainCharacter,
+  showCursor,
+  hideCursor,
+  eraseScreen,
+} from "./util.js";
 
 import {
   Chamber,
@@ -31,8 +39,8 @@ const chambers = [];
 const chatHistory = [];
 
 let level = 0;
-let horMov = 0;
-let verMov = 0;
+let playerX = 0;
+let playerY = 0;
 let dialogueIndex = 0;
 
 let dialogue;
@@ -76,8 +84,8 @@ for (let i = 0; i < numChambers; i++) {
   );
   chambers.push(newChamber);
   if (i > 0) {
-    newChamber.door2 = true;
-    newChamber.door2Y = chambers[i - 1].doorY;
+    newChamber.entrance = true;
+    newChamber.entranceY = chambers[i - 1].exitY;
   }
   offset += w;
 }
@@ -85,9 +93,10 @@ for (let i = 0; i < numChambers; i++) {
 initializeGame();
 
 process.stdin.on("keypress", async (str, key) => {
-  process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
+  eraseScreen();
+  hideCursor();
   if (firstChamber) {
-    process.stdout.write(ansiEscapes.cursorTo(0, 4));
+    placeAt(0, 4);
 
     if (key.name === "right" && dialogueIndex < prologueSentences.length - 1) {
       dialogueIndex++;
@@ -97,7 +106,7 @@ process.stdin.on("keypress", async (str, key) => {
     }
     createNarrativeBox(prologueSentences, dialogueIndex);
     if (dialogueIndex === prologueSentences.length - 1) {
-      process.stdout.write(ansiEscapes.cursorTo(0, 25));
+      placeAt(0, 25);
       console.log(
         boxen("press 'space' to start your adventure!", {
           float: "center",
@@ -108,11 +117,10 @@ process.stdin.on("keypress", async (str, key) => {
 
     if (key.name === "space") {
       firstChamber = false;
-      horMov = chambers[0].x + 1;
-      verMov = chambers[0].y + 1;
+      playerX = chambers[0].x + 1;
+      playerY = chambers[0].y + 1;
       chambers[0].create();
-      process.stdout.write(ansiEscapes.cursorTo(horMov, verMov));
-      writeMainCharacter();
+      renderMainCharacter(playerX, playerY);
     }
   } else {
     let currentChamber = chambers[level];
@@ -126,46 +134,46 @@ process.stdin.on("keypress", async (str, key) => {
     }
     if (!talkMenu) {
       if (key.name === "d" || key.name === "right") {
-        if (horMov < currentChamber.x + currentChamber.w - 3) {
+        if (playerX < currentChamber.x + currentChamber.w - 3) {
           if (
-            horMov !== currentChamber.characterX - 2 ||
-            verMov !== currentChamber.characterY
+            playerX !== currentChamber.npcX - 2 ||
+            playerY !== currentChamber.npcY
           )
-            horMov += 2;
+            playerX += 2;
         }
       }
 
       if (key.name === "a" || key.name === "left") {
-        if (horMov > currentChamber.x + 1) {
+        if (playerX > currentChamber.x + 1) {
           if (
-            horMov !== currentChamber.characterX + 1 ||
-            verMov !== currentChamber.characterY
+            playerX !== currentChamber.npcX + 1 ||
+            playerY !== currentChamber.npcY
           )
-            horMov -= 2;
+            playerX -= 2;
         }
       }
 
       if (key.name === "s" || key.name === "down") {
-        if (verMov < currentChamber.y + currentChamber.h - 2) {
+        if (playerY < currentChamber.y + currentChamber.h - 2) {
           if (
-            verMov !== currentChamber.characterY - 1 ||
-            horMov !== currentChamber.characterX
+            playerY !== currentChamber.npcY - 1 ||
+            playerX !== currentChamber.npcX
           )
-            verMov++;
+            playerY++;
         }
       }
       if (key.name === "w" || key.name === "up") {
-        if (verMov > currentChamber.y + 1) {
+        if (playerY > currentChamber.y + 1) {
           if (
-            verMov !== currentChamber.characterY + 1 ||
-            horMov !== currentChamber.characterX
+            playerY !== currentChamber.npcY + 1 ||
+            playerX !== currentChamber.npcX
           )
-            verMov--;
+            playerY--;
         }
       }
       if (
-        verMov === currentChamber.doorY &&
-        horMov >= currentChamber.doorX - 3
+        playerY === currentChamber.exitY &&
+        playerX >= currentChamber.exitX - 3
       ) {
         if (doorLocked) {
           writeMessage(colors.red("The door is locked"), 4);
@@ -186,9 +194,8 @@ process.stdin.on("keypress", async (str, key) => {
             );
             doorLocked = true;
             if (finalChamber) {
-              process.stdout.write(
-                ansiEscapes.eraseScreen + ansiEscapes.cursorHide
-              );
+              eraseScreen();
+              hideCursor();
               epilogue = await createEpilogue(
                 gameInfo,
                 chatHistory,
@@ -202,19 +209,16 @@ process.stdin.on("keypress", async (str, key) => {
         }
       }
       if (
-        verMov <= currentChamber.characterY + 1 &&
-        verMov >= currentChamber.characterY - 1 &&
-        horMov >= currentChamber.characterX - 3 &&
-        horMov <= currentChamber.characterX + 2
+        playerY <= currentChamber.npcY + 1 &&
+        playerY >= currentChamber.npcY - 1 &&
+        playerX >= currentChamber.npcX - 3 &&
+        playerX <= currentChamber.npcX + 2
       ) {
         writeMessage("Press 'space' to talk", 4);
 
         if (key.name === "space") {
-          createchambers();
-          process.stdout.write(
-            ansiEscapes.cursorForward(horMov) + ansiEscapes.cursorDown(verMov)
-          );
-          writeMainCharacter();
+          renderChambers();
+          renderMainCharacter(playerX, playerY);
           dialogue = await createDialogue(
             chambersInfo[level],
             messages,
@@ -222,7 +226,7 @@ process.stdin.on("keypress", async (str, key) => {
             chatHistory,
             numChambers
           );
-          process.stdout.write(ansiEscapes.cursorHide);
+          hideCursor();
           dialogueIndex = 0;
           talkMenu = true;
         }
@@ -236,15 +240,12 @@ process.stdin.on("keypress", async (str, key) => {
         talkMenu = false;
       }
     }
-    createchambers();
+    renderChambers();
 
-    process.stdout.write(
-      ansiEscapes.cursorForward(horMov) + ansiEscapes.cursorDown(verMov)
-    );
-    writeMainCharacter();
+    renderMainCharacter(playerX, playerY);
 
     if (talkMenu && !finalChamber && !firstChamber) {
-      process.stdout.write(ansiEscapes.cursorTo(0, 0));
+      placeAt(0, 0);
       let sentences = splitSentences(dialogue);
       if (key.name === "right" && dialogueIndex < sentences.length - 1) {
         dialogueIndex++;
@@ -255,8 +256,8 @@ process.stdin.on("keypress", async (str, key) => {
       createDialogueBox(sentences, dialogueIndex, currentChamber, character);
       if (key.name === "t") {
         dialogueIndex = 0;
-        process.stdout.write(ansiEscapes.cursorShow);
-        process.stdout.write(ansiEscapes.cursorTo(0, 43));
+        showCursor();
+        placeAt(0, 43);
         let playerResponse = prompt("Your response:");
         if (key.name === "return") {
           dialogueIndex = 0;
@@ -271,21 +272,19 @@ process.stdin.on("keypress", async (str, key) => {
           numChambers
         );
         dialogueIndex = 0;
-        process.stdout.write(ansiEscapes.cursorHide);
-        process.stdout.write(ansiEscapes.cursorTo(0, 0));
+        hideCursor();
+        placeAt(0, 0);
       }
-      process.stdout.write(ansiEscapes.cursorTo(0, 0));
+      placeAt(0, 0);
     }
 
-    createchambers();
+    renderChambers();
 
-    process.stdout.write(
-      ansiEscapes.cursorForward(horMov) + ansiEscapes.cursorDown(verMov)
-    );
-    writeMainCharacter();
+    renderMainCharacter(playerX, playerY);
 
     if (talkMenu && finalChamber) {
-      process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
+      eraseScreen();
+      hideCursor();
       let epilogueSentences = splitSentences(epilogue);
       if (
         key.name === "right" &&
@@ -300,7 +299,8 @@ process.stdin.on("keypress", async (str, key) => {
     }
   }
   if (key.ctrl === true && key.name === "c") {
-    process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorShow);
+    eraseScreen();
+    showCursor();
     let chatObject = { history: chatHistory };
     let jsonStr = JSON.stringify(chatObject);
     await Deno.writeTextFile("chat_history.json", jsonStr);
@@ -308,11 +308,7 @@ process.stdin.on("keypress", async (str, key) => {
   }
 });
 
-function writeMainCharacter() {
-  console.log("[]");
-}
-
-function createchambers() {
+function renderChambers() {
   for (let i = level; i >= 0; i--) {
     chambers[i].create();
   }
@@ -332,15 +328,13 @@ function initializeGame() {
   readline.emitKeypressEvents(process.stdin);
   if (process.stdin.isTTY) process.stdin.setRawMode(true);
 
-  process.stdout.write(ansiEscapes.clearScreen + ansiEscapes.cursorHide);
+  eraseScreen();
+  hideCursor();
 
   chambers[0].create();
 
-  process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
+  eraseScreen();
+  hideCursor();
 
   createNarrativeBox(prologueSentences, 0);
-
-  // process.stdout.write(ansiEscapes.cursorTo(horMov, verMov));
-  // writeMainCharacter();
-  // process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
 }

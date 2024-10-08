@@ -9,14 +9,14 @@ export class Chamber {
     this.y = y;
     this.w = w;
     this.h = h;
-    this.characterX = randomInt(this.x + 2, this.x + this.w - 5);
-    this.characterY = randomInt(this.y + 2, this.y + this.h - 4);
-    this.doorY = randomInt(this.y + 2, this.y + this.h - 4);
-    this.doorX = this.x + this.w - 1;
+    this.npcX = randomInt(this.x + 2, this.x + this.w - 5);
+    this.npcY = randomInt(this.y + 2, this.y + this.h - 4);
+    this.exitX = this.x + this.w - 1;
+    this.exitY = randomInt(this.y + 2, this.y + this.h - 4);
 
-    this.door2 = false;
-    this.door2Y = 0;
-    this.door2X = this.x;
+    this.entrance = false;
+    this.entranceY = 0;
+    this.entranceX = this.x;
   }
   create() {
     process.stdout.write(ansiEscapes.cursorTo(0, 0));
@@ -28,14 +28,14 @@ export class Chamber {
         borderStyle: "classic",
       })
     );
-    process.stdout.write(
-      ansiEscapes.cursorTo(this.characterX, this.characterY)
-    );
+    process.stdout.write(ansiEscapes.cursorTo(this.npcX, this.npcY));
     console.log("&");
-    process.stdout.write(ansiEscapes.cursorTo(this.doorX, this.doorY));
+    process.stdout.write(ansiEscapes.cursorTo(this.exitX, this.exitY));
     console.log("%");
-    if (this.door2) {
-      process.stdout.write(ansiEscapes.cursorTo(this.door2X, this.door2Y));
+    if (this.entrance) {
+      process.stdout.write(
+        ansiEscapes.cursorTo(this.entranceX, this.entranceY)
+      );
       console.log("%");
     }
 
