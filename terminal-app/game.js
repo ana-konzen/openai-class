@@ -22,6 +22,18 @@ const numChambers = 5;
 const chambers = [];
 const chatHistory = [];
 
+let level = 0;
+let horMov = 0;
+let verMov = 0;
+
+let dialogueIndex;
+
+let talkMenu = false;
+let doorLocked = true;
+let finalMessage;
+let finalChamber = false;
+let firstChamber = true;
+
 const gameInfo = await createGame(numChambers);
 
 const chambersInfo = gameInfo.chambers;
@@ -30,7 +42,7 @@ let firstMessage = await createInitialMessage(gameInfo, numChambers);
 
 chatHistory.push({
   chamber: "introduction",
-  npc: "the narrator",
+  character: "the narrator",
   chat: firstMessage,
 });
 
@@ -40,8 +52,8 @@ class Chamber {
     this.y = y;
     this.w = w;
     this.h = h;
-    this.npcX = randomInt(this.x + 2, this.x + this.w - 5);
-    this.npcY = randomInt(this.y + 2, this.y + this.h - 4);
+    this.characterX = randomInt(this.x + 2, this.x + this.w - 5);
+    this.characterY = randomInt(this.y + 2, this.y + this.h - 4);
     this.doorY = randomInt(this.y + 2, this.y + this.h - 4);
     this.doorX = this.x + this.w - 1;
 
@@ -59,7 +71,9 @@ class Chamber {
         borderStyle: "classic",
       })
     );
-    process.stdout.write(ansiEscapes.cursorTo(this.npcX, this.npcY));
+    process.stdout.write(
+      ansiEscapes.cursorTo(this.characterX, this.characterY)
+    );
     console.log("&");
     process.stdout.write(ansiEscapes.cursorTo(this.doorX, this.doorY));
     console.log("%");
@@ -75,37 +89,27 @@ class Chamber {
 let offset = 0;
 for (let i = 0; i < numChambers; i++) {
   let w = randomInt(6, 15) * 2;
-  let chamber = new Chamber(w, randomInt(10, 12), i + offset, randomInt(5, 8));
-  chambers.push(chamber);
+  let newChamber = new Chamber(
+    w,
+    randomInt(10, 12),
+    i + offset,
+    randomInt(5, 8)
+  );
+  chambers.push(newChamber);
   if (i > 0) {
-    chamber.door2 = true;
-    chamber.door2Y = chambers[i - 1].doorY;
+    newChamber.door2 = true;
+    newChamber.door2Y = chambers[i - 1].doorY;
   }
   offset += w;
 }
-
-let finalchamber = false;
-
-let firstchamber = true;
 
 process.stdin.resume();
 
 readline.emitKeypressEvents(process.stdin);
 if (process.stdin.isTTY) process.stdin.setRawMode(true);
 
-let level = 0;
-let dialogueIndex;
-
-let chamber = 0;
-
-let talkMenu = false;
-
-let doorLocked = true;
-
-let finalMessage;
-
 let messages = await createMessage(
-  chambersInfo[chamber],
+  chambersInfo[level],
   gameInfo,
   chatHistory,
   numChambers
@@ -115,9 +119,6 @@ let dialogue;
 process.stdout.write(ansiEscapes.clearScreen + ansiEscapes.cursorHide);
 
 chambers[0].create();
-
-let horMov = 0;
-let verMov = 0;
 
 let firstSentences = splitSentences(firstMessage);
 
@@ -132,7 +133,7 @@ dialogueIndex = 0;
 
 process.stdin.on("keypress", async (str, key) => {
   process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
-  if (firstchamber) {
+  if (firstChamber) {
     process.stdout.write(ansiEscapes.cursorTo(0, 4));
 
     if (key.name === "right" && dialogueIndex < firstSentences.length - 1) {
@@ -153,7 +154,7 @@ process.stdin.on("keypress", async (str, key) => {
     }
 
     if (key.name === "space") {
-      firstchamber = false;
+      firstChamber = false;
       horMov = chambers[0].x + 1;
       verMov = chambers[0].y + 1;
       chambers[0].create();
@@ -161,57 +162,57 @@ process.stdin.on("keypress", async (str, key) => {
       writeMainCharacter();
     }
   } else {
-    let currentchamber = chambers[level];
-    let character = chambersInfo[level].npc;
+    let currentChamber = chambers[level];
+    let character = chambersInfo[level].character;
     let trust = character.trustLevel;
     process.stdout.write(ansiEscapes.clearScreen);
-    writeMessage(`${chamber + 1}: ${chambersInfo[level].name}`);
+    writeMessage(`${level + 1}: ${chambersInfo[level].name}`);
     if (key.name === "c" || trust >= 10) {
       writeMessage(colors.green("The character gave you a key!"), 4);
       doorLocked = false;
     }
     if (!talkMenu) {
       if (key.name === "d" || key.name === "right") {
-        if (horMov < currentchamber.x + currentchamber.w - 3) {
+        if (horMov < currentChamber.x + currentChamber.w - 3) {
           if (
-            horMov !== currentchamber.npcX - 2 ||
-            verMov !== currentchamber.npcY
+            horMov !== currentChamber.characterX - 2 ||
+            verMov !== currentChamber.characterY
           )
             horMov += 2;
         }
       }
 
       if (key.name === "a" || key.name === "left") {
-        if (horMov > currentchamber.x + 1) {
+        if (horMov > currentChamber.x + 1) {
           if (
-            horMov !== currentchamber.npcX + 1 ||
-            verMov !== currentchamber.npcY
+            horMov !== currentChamber.characterX + 1 ||
+            verMov !== currentChamber.characterY
           )
             horMov -= 2;
         }
       }
 
       if (key.name === "s" || key.name === "down") {
-        if (verMov < currentchamber.y + currentchamber.h - 2) {
+        if (verMov < currentChamber.y + currentChamber.h - 2) {
           if (
-            verMov !== currentchamber.npcY - 1 ||
-            horMov !== currentchamber.npcX
+            verMov !== currentChamber.characterY - 1 ||
+            horMov !== currentChamber.characterX
           )
             verMov++;
         }
       }
       if (key.name === "w" || key.name === "up") {
-        if (verMov > currentchamber.y + 1) {
+        if (verMov > currentChamber.y + 1) {
           if (
-            verMov !== currentchamber.npcY + 1 ||
-            horMov !== currentchamber.npcX
+            verMov !== currentChamber.characterY + 1 ||
+            horMov !== currentChamber.characterX
           )
             verMov--;
         }
       }
       if (
-        verMov === currentchamber.doorY &&
-        horMov >= currentchamber.doorX - 3
+        verMov === currentChamber.doorY &&
+        horMov >= currentChamber.doorX - 3
       ) {
         if (doorLocked) {
           writeMessage(colors.red("The door is locked"), 4);
@@ -224,19 +225,19 @@ process.stdin.on("keypress", async (str, key) => {
           );
           if (key.name === "e") {
             // process.stdout.write(
-            //   ansiEscapes.cursorTo(currentchamber.doorX + 1, currentchamber.doorY)
+            //   ansiEscapes.cursorTo(currentChamber.doorX + 1, currentChamber.doorY)
             // );
             // console.log("::");
             // process.stdout.write(ansiEscapes.cursorTo(0, 0));
             addLevel();
             messages = await createMessage(
-              chambersInfo[chamber],
+              chambersInfo[level],
               gameInfo,
               chatHistory,
               numChambers
             );
             doorLocked = true;
-            if (finalchamber) {
+            if (finalChamber) {
               process.stdout.write(
                 ansiEscapes.eraseScreen + ansiEscapes.cursorHide
               );
@@ -253,10 +254,10 @@ process.stdin.on("keypress", async (str, key) => {
         }
       }
       if (
-        verMov <= currentchamber.npcY + 1 &&
-        verMov >= currentchamber.npcY - 1 &&
-        horMov >= currentchamber.npcX - 3 &&
-        horMov <= currentchamber.npcX + 2
+        verMov <= currentChamber.characterY + 1 &&
+        verMov >= currentChamber.characterY - 1 &&
+        horMov >= currentChamber.characterX - 3 &&
+        horMov <= currentChamber.characterX + 2
       ) {
         writeMessage("Press 'space' to talk", 4);
 
@@ -267,7 +268,7 @@ process.stdin.on("keypress", async (str, key) => {
           );
           writeMainCharacter();
           dialogue = await createDialogue(
-            chambersInfo[chamber],
+            chambersInfo[level],
             messages,
             trust,
             chatHistory,
@@ -294,7 +295,7 @@ process.stdin.on("keypress", async (str, key) => {
     );
     writeMainCharacter();
 
-    if (talkMenu && !finalchamber && !firstchamber) {
+    if (talkMenu && !finalChamber && !firstChamber) {
       process.stdout.write(ansiEscapes.cursorTo(0, 0));
       let sentences = splitSentences(dialogue);
       if (key.name === "right" && dialogueIndex < sentences.length - 1) {
@@ -303,7 +304,7 @@ process.stdin.on("keypress", async (str, key) => {
       if (key.name === "left" && dialogueIndex > 0) {
         dialogueIndex--;
       }
-      createDialogueBox(sentences, dialogueIndex, currentchamber, character);
+      createDialogueBox(sentences, dialogueIndex, currentChamber, character);
       if (key.name === "t") {
         dialogueIndex = 0;
         process.stdout.write(ansiEscapes.cursorShow);
@@ -315,7 +316,7 @@ process.stdin.on("keypress", async (str, key) => {
         messages.push({ role: "user", content: playerResponse });
         chatHistory.push(`Player: ${playerResponse}`);
         dialogue = await createDialogue(
-          chambersInfo[chamber],
+          chambersInfo[level],
           messages,
           trust,
           chatHistory,
@@ -335,7 +336,7 @@ process.stdin.on("keypress", async (str, key) => {
     );
     writeMainCharacter();
 
-    if (talkMenu && finalchamber) {
+    if (talkMenu && finalChamber) {
       process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
       let finalSentences = splitSentences(finalMessage);
       if (key.name === "right" && dialogueIndex < finalSentences.length - 1) {
@@ -366,8 +367,7 @@ function writeMainCharacter() {
 
 function createchambers() {
   for (let i = level; i >= 0; i--) {
-    const chamber = chambers[i];
-    chamber.create();
+    chambers[i].create();
   }
 }
 
@@ -375,9 +375,8 @@ function addLevel() {
   level++;
   if (level > numChambers - 1) {
     level = numChambers - 1;
-    finalchamber = true;
+    finalChamber = true;
   }
-  chamber = level;
 }
 
 function splitSentences(str) {
@@ -400,7 +399,7 @@ function createNarrativeBox(arr, dialogueIndex) {
   process.stdout.write(ansiEscapes.cursorTo(0, 0));
 }
 
-function createDialogueBox(arr, dialogueIndex, currentchamber, character) {
+function createDialogueBox(arr, dialogueIndex, currentChamber, character) {
   process.stdout.write(ansiEscapes.cursorTo(0, 0));
   console.log(
     boxen(`${arr[dialogueIndex]}\n\n${dialogueIndex + 1}/${arr.length}`, {
@@ -411,7 +410,7 @@ function createDialogueBox(arr, dialogueIndex, currentchamber, character) {
       title: character.name,
       margin: {
         top: 21,
-        left: currentchamber.x,
+        left: currentChamber.x,
       },
       borderStyle: "singleDouble",
     })

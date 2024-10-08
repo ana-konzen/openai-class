@@ -1,61 +1,61 @@
 {
-  "setting": "The game is set within the forgotten catacombs beneath the ancient city of Eldrith, a place steeped in rich history and mysterious tales of lost relics. Legends speak of a benevolent artifact hidden deep within these cryptic tunnels that has the power to alter the very fabric of reality, offering boundless wisdom and power to its possessor. The player, an adventurer curious about these legends, must navigate through a labyrinth filled with cryptic NPCs who guard the truth.",
-  "mystery": "The ultimate mystery revolves around the whereabouts and true nature of the 'Eternal Nexus,' an ancient relic believed to grant eternal knowledge and power. However, to find it, the adventurer must piece together fragmented knowledge from five guardians, each revealing parts of a cryptic prophecy. The prophecy, when complete, should reveal the identity of a mythical figure responsible for hiding the Nexus and a forgotten history that predates even the oldest records.",
-  "finalPrize": "The Eternal Nexus, an artifact that grants unprecedented wisdom and power, allowing the player to reshape reality into a paradise of their choosing.",
+  "setting": "The game is set in an ancient mystical crypt located beneath a forgotten kingdom, steeped in sorcery and guarded secrets. The dimly lit, echoing stone chambers are imbued with eerie magic. Carvings and ancient symbols decorate the walls, hinting at the storied past and potent secrets within. Each room holds a character bound by the crypt’s mystery, wielding knowledge and secrets that the player must unravel to proceed. Shadows creep along the edges, and the air is thick with the residue of past magics and whispers of forgotten spells.",
+  "mystery": "The kingdom above grew prosperous because of a powerful amulet that harnessed the heart of nature’s magic, ensuring perpetual harmony and abundance. The amulet was hidden away by a ancient mage to protect it, and its guardians were given eternal charge to safeguard it. As time passed, the kingdom fell into decline without its influence. The mystery is to uncover the secrets of the amulet, how it is linked to each guardian, and why it was hidden away, to restore balance to the world above.",
+  "finalPrize": "The final prize is the Amulet of Everlasting Harmony. It grants the kingdom peace and prosperity once more. The player also gains the wisdom of the ancient mage who protected it, allowing them to wield magic and knowledge as a newfound protector of the amulet.",
   "chambers": [
     {
-      "name": "Chamber of Whispers",
+      "name": "The Chamber of Whispers",
       "difficulty": 1,
-      "npc": {
-        "name": "Elder Varnel",
-        "role": "The Keeper of First Truths",
+      "character": {
+        "name": "Elaria Swiftfoot",
+        "role": "Guide of Lost Souls",
         "alignment": "Neutral",
         "initialTrustLevel": 8,
-        "keyInteraction": "To obtain the key, the player must express gratitude and curiosity about the ancient history of Eldrith, prompting Varnel to share the first part of the prophecy: 'In the beginning, the light was hidden in the shadow.' This knowledge confirms the existence of the Eternal Nexus."
+        "keyInteraction": "Elaria is intrigued by stories of kindness and bravery. She asks about the player's past adventures and heroic deeds. With genuine tales that appeal to her sense of valor and honor, she will deem the player worthy and hand over the key to progress. Elaria hints at an object of power concealed within the crypt, meant to be discovered by one of pure heart."
       }
     },
     {
-      "name": "Chamber of Echoes",
+      "name": "The Chamber of Reflections",
       "difficulty": 2,
-      "npc": {
-        "name": "Scribe Alyndra",
-        "role": "The Chronicler of Lost Legends",
+      "character": {
+        "name": "Tharion the Seer",
+        "role": "Keeper of Ancient Knowledge",
+        "alignment": "Neutral Good",
+        "initialTrustLevel": 7,
+        "keyInteraction": "Tharion values honesty and insight. He quizzes the player on what Elaria mentioned, particularly focusing on any magical symbols she described. The player must point out two such symbols accurately. Tharion also requires a reflective thought on personal growth since their journey started. The player must show introspection to gain his trust."
+      }
+    },
+    {
+      "name": "The Chamber of Might",
+      "difficulty": 3,
+      "character": {
+        "name": "Baldor Ironclad",
+        "role": "Guardian of Secrets",
         "alignment": "Lawful Neutral",
         "initialTrustLevel": 6,
-        "keyInteraction": "Alyndra requires the player to recall the phrase shared by Elder Varnel. The player must demonstrate an understanding of its significance by contextualizing it within ancient historical events, leading Alyndra to reveal the second part of the prophecy: 'Guarded by the two-faced sentinel.'"
+        "keyInteraction": "Baldor challenges the player's physical and mental fortitude. He asks for a retelling of how the player persuaded Tharion, focusing on their strategic choices. To gain his trust, the player must convince Baldor of their resilience by solving a riddle mentioned by Tharion involving the crypt's structure and gaining the keys. He needs assurance that the player has the strength to go further."
       }
     },
     {
-      "name": "Chamber of Reflections",
-      "difficulty": 3,
-      "npc": {
-        "name": "Mystic Kirion",
-        "role": "The Seer of Forgotten Paths",
-        "alignment": "Chaotic Good",
-        "initialTrustLevel": 5,
-        "keyInteraction": "Here, Kirion will only provide a key once the player shares the insights learned from both Varnel and Alyndra, and acknowledges the importance of balance between light and shadow. In return, Kirion grants insight into the third prophecy: 'The seeker must uncover the past to find the truth.'"
-      }
-    },
-    {
-      "name": "Chamber of Shadows",
+      "name": "The Chamber of Shadows",
       "difficulty": 4,
-      "npc": {
-        "name": "Guardian Thalos",
-        "role": "Protector of Sacred Secrets",
-        "alignment": "Lawful Good",
-        "initialTrustLevel": 4,
-        "keyInteraction": "Thalos demands the player recount all parts of the prophecy received so far. The player must persuade Thalos of their earnest quest for knowledge without ulterior motives. This earns trust and reveals the penultimate part of the prophecy: 'When the stars align, the truth shall surface.'"
+      "character": {
+        "name": "Nyx Shadowweaver",
+        "role": "Silent Watcher",
+        "alignment": "Chaotic Neutral",
+        "initialTrustLevel": 5,
+        "keyInteraction": "Nyx appreciates cunning and disfavor of rules. She asks about Elaria’s past teachings and expects a creative solution to an imaginative problem she poses, reflective of Baldor’s challenges but without clear rules. She also wants to know the player’s thoughts on the moral grayness of their task. Insight into moral flexibility while maintaining sense of purpose intrigues Nyx, who ultimately grants passage."
       }
     },
     {
-      "name": "Chamber of Light",
+      "name": "The Chamber of Unity",
       "difficulty": 5,
-      "npc": {
-        "name": "Oracle Seraphi",
-        "role": "The Final Oracle",
-        "alignment": "True Neutral",
-        "initialTrustLevel": 3,
-        "keyInteraction": "Seraphi challenges the player to not only repeat the full prophecy but also to interpret its symbolism completely. Only by proving deep understanding of Eldrith's forgotten history and the moral implications tied to the Nexus can the player convince Seraphi to reveal the last line of the prophecy: 'Embrace the end and forge the beginning.' This unlocks the final chamber containing the Eternal Nexus."
+      "character": {
+        "name": "Zephyrus Windwalker",
+        "role": "Final Arbiter",
+        "alignment": "Neutral Good",
+        "initialTrustLevel": 4,
+        "keyInteraction": "Zephyrus demands proof of connection and understanding between all the chambers. The player must recount previous interactions and demonstrate a comprehensive grasp of the total mystery. The final hurdle involves showing empathy towards the character's burdens, seeing them not just as gatekeepers but as integral parts of the mystery. Zephyrus will test the player's ability to link each character's story together, reflecting the whole scope of wisdom they've gathered."
       }
     }
   ]
