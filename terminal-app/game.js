@@ -18,6 +18,10 @@ import {
   writeMessage,
 } from "./chats.js"; //ChatGPT prompts and other utility functions for the game
 
+import { randomInt, splitSentences } from "./util.js";
+
+import { Chamber } from "./chamber.js";
+
 const numChambers = 5;
 const chambers = [];
 const chatHistory = [];
@@ -25,8 +29,9 @@ const chatHistory = [];
 let level = 0;
 let horMov = 0;
 let verMov = 0;
+let dialogueIndex = 0;
 
-let dialogueIndex;
+let dialogue;
 
 let talkMenu = false;
 let doorLocked = true;
@@ -39,6 +44,7 @@ const gameInfo = await createGame(numChambers);
 const chambersInfo = gameInfo.chambers;
 
 let firstMessage = await createInitialMessage(gameInfo, numChambers);
+let firstSentences = splitSentences(firstMessage);
 
 chatHistory.push({
   chamber: "introduction",
@@ -46,45 +52,12 @@ chatHistory.push({
   chat: firstMessage,
 });
 
-class Chamber {
-  constructor(w, h, x = 0, y = 0) {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
-    this.characterX = randomInt(this.x + 2, this.x + this.w - 5);
-    this.characterY = randomInt(this.y + 2, this.y + this.h - 4);
-    this.doorY = randomInt(this.y + 2, this.y + this.h - 4);
-    this.doorX = this.x + this.w - 1;
-
-    this.door2 = false;
-    this.door2Y = 0;
-    this.door2X = this.x;
-  }
-  create() {
-    process.stdout.write(ansiEscapes.cursorTo(0, 0));
-    console.log(
-      boxen("", {
-        width: this.w,
-        height: this.h,
-        margin: { left: this.x, top: this.y },
-        borderStyle: "classic",
-      })
-    );
-    process.stdout.write(
-      ansiEscapes.cursorTo(this.characterX, this.characterY)
-    );
-    console.log("&");
-    process.stdout.write(ansiEscapes.cursorTo(this.doorX, this.doorY));
-    console.log("%");
-    if (this.door2) {
-      process.stdout.write(ansiEscapes.cursorTo(this.door2X, this.door2Y));
-      console.log("%");
-    }
-
-    process.stdout.write(ansiEscapes.cursorTo(0, 0));
-  }
-}
+let messages = await createMessage(
+  chambersInfo[level],
+  gameInfo,
+  chatHistory,
+  numChambers
+);
 
 let offset = 0;
 for (let i = 0; i < numChambers; i++) {
@@ -103,33 +76,7 @@ for (let i = 0; i < numChambers; i++) {
   offset += w;
 }
 
-process.stdin.resume();
-
-readline.emitKeypressEvents(process.stdin);
-if (process.stdin.isTTY) process.stdin.setRawMode(true);
-
-let messages = await createMessage(
-  chambersInfo[level],
-  gameInfo,
-  chatHistory,
-  numChambers
-);
-let dialogue;
-
-process.stdout.write(ansiEscapes.clearScreen + ansiEscapes.cursorHide);
-
-chambers[0].create();
-
-let firstSentences = splitSentences(firstMessage);
-
-process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
-
-createNarrativeBox(firstSentences, 0);
-
-// process.stdout.write(ansiEscapes.cursorTo(horMov, verMov));
-// writeMainCharacter();
-// process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
-dialogueIndex = 0;
+initializeGame();
 
 process.stdin.on("keypress", async (str, key) => {
   process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
@@ -224,11 +171,6 @@ process.stdin.on("keypress", async (str, key) => {
             4
           );
           if (key.name === "e") {
-            // process.stdout.write(
-            //   ansiEscapes.cursorTo(currentChamber.doorX + 1, currentChamber.doorY)
-            // );
-            // console.log("::");
-            // process.stdout.write(ansiEscapes.cursorTo(0, 0));
             addLevel();
             messages = await createMessage(
               chambersInfo[level],
@@ -357,10 +299,6 @@ process.stdin.on("keypress", async (str, key) => {
   }
 });
 
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function writeMainCharacter() {
   console.log("[]");
 }
@@ -377,10 +315,6 @@ function addLevel() {
     level = numChambers - 1;
     finalChamber = true;
   }
-}
-
-function splitSentences(str) {
-  return str.match(/[^\.!\?]+[\.!\?]+[\n\r]*/g);
 }
 
 function createNarrativeBox(arr, dialogueIndex) {
@@ -416,4 +350,23 @@ function createDialogueBox(arr, dialogueIndex, currentChamber, character) {
     })
   );
   process.stdout.write(ansiEscapes.cursorTo(0, 0));
+}
+
+function initializeGame() {
+  process.stdin.resume();
+
+  readline.emitKeypressEvents(process.stdin);
+  if (process.stdin.isTTY) process.stdin.setRawMode(true);
+
+  process.stdout.write(ansiEscapes.clearScreen + ansiEscapes.cursorHide);
+
+  chambers[0].create();
+
+  process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
+
+  createNarrativeBox(firstSentences, 0);
+
+  // process.stdout.write(ansiEscapes.cursorTo(horMov, verMov));
+  // writeMainCharacter();
+  // process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
 }

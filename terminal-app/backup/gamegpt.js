@@ -1,5 +1,5 @@
-import { promptGPT, initOpenAI, gpt } from "../shared/openai.ts";
-import { ask, say } from "../shared/cli.ts";
+import { promptGPT, initOpenAI, gpt } from "../../shared/openai.ts";
+import { ask, say } from "../../shared/cli.ts";
 
 const gameInfo = await createGame();
 

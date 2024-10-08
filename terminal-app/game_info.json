@@ -1,61 +1,61 @@
 {
-  "setting": "The game is set in an ancient mystical crypt located beneath a forgotten kingdom, steeped in sorcery and guarded secrets. The dimly lit, echoing stone chambers are imbued with eerie magic. Carvings and ancient symbols decorate the walls, hinting at the storied past and potent secrets within. Each room holds a character bound by the crypt’s mystery, wielding knowledge and secrets that the player must unravel to proceed. Shadows creep along the edges, and the air is thick with the residue of past magics and whispers of forgotten spells.",
-  "mystery": "The kingdom above grew prosperous because of a powerful amulet that harnessed the heart of nature’s magic, ensuring perpetual harmony and abundance. The amulet was hidden away by a ancient mage to protect it, and its guardians were given eternal charge to safeguard it. As time passed, the kingdom fell into decline without its influence. The mystery is to uncover the secrets of the amulet, how it is linked to each guardian, and why it was hidden away, to restore balance to the world above.",
-  "finalPrize": "The final prize is the Amulet of Everlasting Harmony. It grants the kingdom peace and prosperity once more. The player also gains the wisdom of the ancient mage who protected it, allowing them to wield magic and knowledge as a newfound protector of the amulet.",
+  "setting": "The game is set within a sprawling, ancient, and mystical library known for hiding countless secrets from different realms and times. Rumor has it that hidden deep within its stone walls is a forbidden book penned by a primordial mage whose knowledge could grant its reader limitless wisdom and power. Each chamber in this labyrinthine library is enchanted to test the ingenuity and wit of any who dare to unravel the mystery and claim the prize.",
+  "mystery": "An ancient spell cast a long time ago is causing a slow decay of reality, where dreams and nightmares start to merge into the world, threatening existence. The mystery involves unraveling this spell and finding out who actually authored it long ago — and why. Each character in the chambers holds fragments of the truth about the origins of this spell, who cast it, and how it can be undone.",
+  "finalPrize": "The final prize is the Forbidden Tome of Eternity, a book that contains the true name of the primordial mage and the spells needed to both harness and reverse the spell’s effects, restoring balance to the world.",
   "chambers": [
     {
-      "name": "The Chamber of Whispers",
+      "name": "Chamber of the Whispering Shadows",
       "difficulty": 1,
       "character": {
-        "name": "Elaria Swiftfoot",
-        "role": "Guide of Lost Souls",
-        "alignment": "Neutral",
-        "initialTrustLevel": 8,
-        "keyInteraction": "Elaria is intrigued by stories of kindness and bravery. She asks about the player's past adventures and heroic deeds. With genuine tales that appeal to her sense of valor and honor, she will deem the player worthy and hand over the key to progress. Elaria hints at an object of power concealed within the crypt, meant to be discovered by one of pure heart."
-      }
-    },
-    {
-      "name": "The Chamber of Reflections",
-      "difficulty": 2,
-      "character": {
-        "name": "Tharion the Seer",
-        "role": "Keeper of Ancient Knowledge",
+        "name": "Lirael the Librarian",
+        "role": "Custodian of the first layer of the library's secrets.",
         "alignment": "Neutral Good",
         "initialTrustLevel": 7,
-        "keyInteraction": "Tharion values honesty and insight. He quizzes the player on what Elaria mentioned, particularly focusing on any magical symbols she described. The player must point out two such symbols accurately. Tharion also requires a reflective thought on personal growth since their journey started. The player must show introspection to gain his trust."
+        "keyInteraction": "Lirael will ask the player about their perspective on the importance of knowledge. The player must express an understanding of knowledge as a tool for both creation and destruction."
       }
     },
     {
-      "name": "The Chamber of Might",
-      "difficulty": 3,
+      "name": "Chamber of Riddles",
+      "difficulty": 2,
       "character": {
-        "name": "Baldor Ironclad",
-        "role": "Guardian of Secrets",
-        "alignment": "Lawful Neutral",
-        "initialTrustLevel": 6,
-        "keyInteraction": "Baldor challenges the player's physical and mental fortitude. He asks for a retelling of how the player persuaded Tharion, focusing on their strategic choices. To gain his trust, the player must convince Baldor of their resilience by solving a riddle mentioned by Tharion involving the crypt's structure and gaining the keys. He needs assurance that the player has the strength to go further."
-      }
-    },
-    {
-      "name": "The Chamber of Shadows",
-      "difficulty": 4,
-      "character": {
-        "name": "Nyx Shadowweaver",
-        "role": "Silent Watcher",
+        "name": "Gideon the Cryptic",
+        "role": "Guardian of the Riddles and Keeper of Half-Truths.",
         "alignment": "Chaotic Neutral",
         "initialTrustLevel": 5,
-        "keyInteraction": "Nyx appreciates cunning and disfavor of rules. She asks about Elaria’s past teachings and expects a creative solution to an imaginative problem she poses, reflective of Baldor’s challenges but without clear rules. She also wants to know the player’s thoughts on the moral grayness of their task. Insight into moral flexibility while maintaining sense of purpose intrigues Nyx, who ultimately grants passage."
+        "keyInteraction": "Gideon will share with the player a riddle tied to the history of the library. The player's answer must reflect insights gathered from Lirael about knowledge's dual nature to show their understanding."
       }
     },
     {
-      "name": "The Chamber of Unity",
+      "name": "Chamber of Echoes",
+      "difficulty": 3,
+      "character": {
+        "name": "Mira the Muse",
+        "role": "Lorekeeper of the Past and One Who Remembers.",
+        "alignment": "Lawful Neutral",
+        "initialTrustLevel": 4,
+        "keyInteraction": "Mira will ask the player to recount themes from past visions (like dreams) that reflect the conflict and peace seen in the world. This is based on the library lore and needs to reflect echoes from the first two chambers."
+      }
+    },
+    {
+      "name": "Chamber of Secrets",
+      "difficulty": 4,
+      "character": {
+        "name": "Faelan the Watcher",
+        "role": "Seer of Forgotten Times and the future.",
+        "alignment": "Neutral Evil",
+        "initialTrustLevel": 3,
+        "keyInteraction": "Faelan will challenge the player to recount a specific tale of conflict within the library, ensuring they touch upon details learned from Gideon and Mira. This will prove if the player has untangled enough truths about past betrayals."
+      }
+    },
+    {
+      "name": "Chamber of the Starlit Archive",
       "difficulty": 5,
       "character": {
-        "name": "Zephyrus Windwalker",
-        "role": "Final Arbiter",
-        "alignment": "Neutral Good",
-        "initialTrustLevel": 4,
-        "keyInteraction": "Zephyrus demands proof of connection and understanding between all the chambers. The player must recount previous interactions and demonstrate a comprehensive grasp of the total mystery. The final hurdle involves showing empathy towards the character's burdens, seeing them not just as gatekeepers but as integral parts of the mystery. Zephyrus will test the player's ability to link each character's story together, reflecting the whole scope of wisdom they've gathered."
+        "name": "Selene the Wise",
+        "role": "One of the ancient counsel members who witnessed the spell's casting.",
+        "alignment": "True Neutral",
+        "initialTrustLevel": 2,
+        "keyInteraction": "Selene asks the player to articulate the ultimate lesson learned throughout the chambers — the balance between wisdom and power. The response should integrate knowledge from all previous interactions, showing an understanding of hope, fear, and truth as shared by those encountered."
       }
     }
   ]
