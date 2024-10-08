@@ -1,0 +1,62 @@
+{
+  "setting": "The game takes place in the eerie confines of Eldritch Manor, a grand, crumbling estate shrouded in mist. Each room within the manor is steeped in shadow and mystery, echoing with untold stories. The manor is said to be cursed, with secrets buried deep within its dusk-laden halls. Only the bravest can unravel the home’s truth and claim the treasures that lie hidden.",
+  "mystery": "The overarching mystery is the disappearance of Baron Eldritch, the manor's last residing owner, who vanished under cryptic circumstances. Whispers speak of arcane experiments and forbidden rituals that took place in the manor. The player must piece together the truth behind these ominous events from the characters within the rooms, each protecting a part of this convoluted tale.",
+  "final_prize": "The final prize is the Baron’s hidden treasure, rumored to be an ancient artifact that grants the power to rewrite certain events of the past. It's the key to understanding the reality behind the Baron's experiments and the guardian of untold power.",
+  "rooms": [
+    {
+      "name": "The Entrance Hall",
+      "difficulty": 1,
+      "character": {
+        "name": "Emma, the Curious Maid",
+        "role": "Emma is the manor’s maid and was the last to see the Baron before his disappearance.",
+        "alignment": "Neutral Good",
+        "trust_level": 8,
+        "key_interaction": "The player must comfort Emma by expressing empathy and understanding her fear regarding the Baron's disappearance. She prizes emotions and needs reassurance that the player will solve this mystery without disturbing spirits."
+      }
+    },
+    {
+      "name": "The Library of Whispers",
+      "difficulty": 2,
+      "character": {
+        "name": "Sebastian, the Eccentric Librarian",
+        "role": "Sebastian was the one who often provided rare books to the Baron for his studies.",
+        "alignment": "Chaotic Neutral",
+        "trust_level": 6,
+        "key_interaction": "The player needs to show knowledge by recalling quotes from the rare books Emma mentioned the Baron had been interested in, thus proving their intent to delve deeper into the mystery."
+      }
+    },
+    {
+      "name": "The Alchemical Workshop",
+      "difficulty": 3,
+      "character": {
+        "name": "Victor, the Alchemist",
+        "role": "Victor assisted the Baron, providing materials for his experiments.",
+        "alignment": "Lawful Neutral",
+        "trust_level": 5,
+        "key_interaction": "The player must show reasoning skills by summarizing the experiments theorized by the Baron based on books from the library. Victor requires logical continuity in the player's insights to trust them with the key."
+      }
+    },
+    {
+      "name": "The Secret Observatory",
+      "difficulty": 4,
+      "character": {
+        "name": "Margaret, the Astrologer",
+        "role": "Margaret guided the Baron's exploration of cosmic forces.",
+        "alignment": "Neutral Good",
+        "trust_level": 4,
+        "key_interaction": "The player must narrate the events leading to the Baron’s sudden shift towards cosmic research and prove they've assembled the story pieces accurately from the previous characters. Margaret values coherence and cosmic understanding."
+      }
+    },
+    {
+      "name": "The Inner Sanctum",
+      "difficulty": 5,
+      "character": {
+        "name": "Ezra, the Warden of Secrets",
+        "role": "Ezra is the keeper of all hidden knowledge within the manor.",
+        "alignment": "True Neutral",
+        "trust_level": 2,
+        "key_interaction": "The player needs to evidence their full comprehension of the Baron’s intentions and demonstrate the effects of the artifact once claimed. Ezra, needing full verification of true understanding and intention, only trusts those who have shown deep knowledge and moral clarity throughout their journey."
+      }
+    }
+  ]
+}

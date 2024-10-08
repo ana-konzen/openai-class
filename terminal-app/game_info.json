@@ -1,0 +1,62 @@
+{
+  "setting": "The abandoned halls of the Astral Academy serve as the setting where ancient mysteries and secrets long forgotten dwell. Once the pinnacle of magical learning, the academy was sealed a century ago after a devastating event obscured in legend and rumors. Secluded amidst the sky-piercing peaks and enshrouded in magical mists, the dungeon promises unspoken wisdom and perilous secrets to those who dare explore its uninhabited corridors.",
+  "mystery": "The Astral Academy's mystery revolves around an enigmatic incident known as \"The Great Disappearance,\" where scholars of the academy vanished overnight, leaving behind cryptic recordings and traces of powerful, unstable magic. The player must unravel this mystery, piecing together how these scholars vanished, what magical experiment went wrong, and who was behind it all.",
+  "finalPrize": "The Tome of Enlightenment, an ancient artifact containing the lost knowledge of the astral magicians and the secret to bending reality itself.",
+  "rooms": [
+    {
+      "name": "The Enchanted Foyer",
+      "difficulty": 1,
+      "npc": {
+        "name": "Professor Lurm",
+        "role": "An old librarian who recorded the academy's history.",
+        "alignment": "Neutral",
+        "initialTrustLevel": 7,
+        "keyInteraction": "Engage with Professor Lurm in dialogue to learn about the academy's founding principles. Ask him about the mysterious phonograph recording that reveals who was the last scholar seen within the walls."
+      }
+    },
+    {
+      "name": "The Hall of Echoes",
+      "difficulty": 2,
+      "npc": {
+        "name": "Archivist Selene",
+        "role": "Keeper of the academy's personal diaries and progress logs.",
+        "alignment": "Friendly",
+        "initialTrustLevel": 6,
+        "keyInteraction": "Selene demands to know what you learned from Professor Lurm about the last seen scholar. Share specifics from Lurm's revelations and inquire about Selene's knowledge of unauthorized magical practices lingering in the diaries."
+      }
+    },
+    {
+      "name": "The Alchemical Lab",
+      "difficulty": 3,
+      "npc": {
+        "name": "Master Alchemist Zephyr",
+        "role": "One of the last surviving scholars who fled during \"The Great Disappearance.\"",
+        "alignment": "Cautious",
+        "initialTrustLevel": 5,
+        "keyInteraction": "Tell Zephyr what Selene mentioned about unauthorized practices and ask if Zephyr knew about this. He will hand over useful clues regarding secret experiments if you correctly identify the discrepancies in the diary accounts from Selene."
+      }
+    },
+    {
+      "name": "The Arboretum Sanctum",
+      "difficulty": 4,
+      "npc": {
+        "name": "Sylvannis the Botanist",
+        "role": "Responsible for maintaining magical fauna within the academy.",
+        "alignment": "Suspicious",
+        "initialTrustLevel": 4,
+        "keyInteraction": "Convey Zephyr's findings about the experimental corruption needing botanical intervention. Sylvannis requires proof of understanding the nature of these shifted plants before offering the key insights on who led the ill-fated experiment."
+      }
+    },
+    {
+      "name": "The Astral Observatory",
+      "difficulty": 5,
+      "npc": {
+        "name": "Seer Astora",
+        "role": "Prophetess of the Stars, aware of the academy's ultimate fate.",
+        "alignment": "Mysterious",
+        "initialTrustLevel": 3,
+        "keyInteraction": "Astora seeks a recital of all truths uncovered with prior NPCs. When you successfully recount and connect all threads of the Great Disappearance—including the leader responsible—Astora will give you the key to claim the Tome of Enlightenment."
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "setting": "In a breathtaking underground city called 'Cytheria,' hidden for centuries beneath a modern metropolis, remnants of an ancient and advanced civilization hint at untold powers and secrets. This hidden world is otherwise suffocatingly barren, except for five unique rooms concealed by the veils of time. Each room houses a solitary character who has lived in this secluded city guarding specific wisdom and relics of old.",
+  "mystery": "The mystery revolves around an ancient device known as the 'Clockwork Heart,' a powerful artifact that is said to grant its possessor the ability to reshape reality itself. However, the key to unlocking its full potential, the enigma of its safe usage, and its historical significance, remain buried within the sealed and forgotten halls of Cytheria.",
+  "final_prize": "The Clockwork Heart itself is the final prize, possessing the ability to build or destroy worlds, unlock boundless knowledge, and shape the very fabric of reality.",
+  "rooms": [
+    {
+      "name": "Room of Beginnings",
+      "difficulty": 1,
+      "character": {
+        "name": "Eliara the Historian",
+        "role": "Guardian of Legends, she holds the beginning thread of the artifact's lore.",
+        "alignment": "Neutral Good",
+        "initial_trust_level": 8,
+        "key_interaction": "Eliara seeks a genuine interest in the ancient tales and requires the player to retell some parts of history correctly, paying special attention to how ruthless sieges once ended in diplomacy."
+      }
+    },
+    {
+      "name": "Room of Echoes",
+      "difficulty": 2,
+      "character": {
+        "name": "Marlo the Sage",
+        "role": "Chronicler of Souls, preserves whispers of past inhabitants.",
+        "alignment": "Chaotic Good",
+        "initial_trust_level": 7,
+        "key_interaction": "Marlo wants proof that the player truly values community; he asks them to recount interactions with Eliara, focusing on recollections of unity among ancient societies."
+      }
+    },
+    {
+      "name": "Room of Shadows",
+      "difficulty": 3,
+      "character": {
+        "name": "Gideon the Outcast",
+        "role": "Keeper of Forbidden Knowledge, knows the darker truths of Cytheria.",
+        "alignment": "Neutral",
+        "initial_trust_level": 5,
+        "key_interaction": "Gideon tests whether the player understands the burden of knowledge, requiring them to balance truth with consequence in their past decisions, particularly their exchanges with Marlo."
+      }
+    },
+    {
+      "name": "Room of Reflections",
+      "difficulty": 4,
+      "character": {
+        "name": "Lyra the Visionary",
+        "role": "Seer of Possible Futures, she deciphers potential paths based on Clockwork Heart's influence.",
+        "alignment": "Lawful Neutral",
+        "initial_trust_level": 4,
+        "key_interaction": "Lyra demands the player envisage the most selfless use of the Clockwork Heart, drawing from their encounters with Gideon to understand the full weight of the artifact’s power."
+      }
+    },
+    {
+      "name": "Room of Secrets",
+      "difficulty": 5,
+      "character": {
+        "name": "Valen the Keyholder",
+        "role": "Guardian of the Artifact, final link to unlocking the Clockwork Heart's chamber.",
+        "alignment": "Lawful Good",
+        "initial_trust_level": 3,
+        "key_interaction": "Valen requires a precise recount of what the \"Clockwork Heart\" symbolizes to all characters before; a synthesis of all dialogues which acknowledges the Heart's potential for both creation and destruction."
+      }
+    }
+  ]
+}

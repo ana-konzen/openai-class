@@ -1,0 +1,62 @@
+{
+  "setting": "The game takes place in a long-abandoned library deep in a mystical forest. The library once belonged to a secretive society known for its extensive knowledge of the magical and the arcane. Enchanted lanterns light the musty corridors, and the air is filled with whispers of ancient wisdom. As the player explores the labyrintine aisles, the true nature of the library begins to unfurl.",
+  "mystery": "The player has to uncover the truth behind the disappearance of the society's leader, Archmage Lyra, who was rumored to possess knowledge of the eternal life. Each character holds a fragment of the story that, when pieced together, reveals Lyra's fate and the implications of her last experiment.",
+  "final_prize": "The Tome of Eternal Life, an ancient book believed to contain secrets to life beyond physical death, lost with Archmage Lyra.",
+  "rooms": [
+    {
+      "name": "The Hall of Echoes",
+      "difficulty": 1,
+      "character": {
+        "name": "Aldor the Scrapkeeper",
+        "role": "Aldor was the librarian tasked with maintaining mundane records. He witnessed events leading up to Lyra's disappearance.",
+        "alignment": "Neutral Good",
+        "initial_trust_level": 8,
+        "key_interaction": "The player needs to prove they know the importance of mundane records to magical practices, prompting Aldor to share his notes on what exactly was missing the day Lyra vanished."
+      }
+    },
+    {
+      "name": "The Chamber of Whispers",
+      "difficulty": 2,
+      "character": {
+        "name": "Celeste the Chronicler",
+        "role": "Celeste recorded all magical experiments. Her journal might contain clues about Lyra's final experiment.",
+        "alignment": "Chaotic Neutral",
+        "initial_trust_level": 6,
+        "key_interaction": "The player must convince Celeste of their intentions by correctly recalling an anomaly mentioned by Aldor. Celeste will then share a page of her journal detailing Lyra's last documented experiment."
+      }
+    },
+    {
+      "name": "The Alchemist's Alcove",
+      "difficulty": 3,
+      "character": {
+        "name": "Thorian the Alchemist",
+        "role": "Thorian provided ingredients for Lyra's experiments and holds knowledge about a specific ingredient used in her last days.",
+        "alignment": "Lawful Neutral",
+        "initial_trust_level": 5,
+        "key_interaction": "The player needs to demonstrate understanding of rare ingredients' effects, which were hinted at in Celeste's journal entry, before Thorian reveals the component used in Lyra's final experiment."
+      }
+    },
+    {
+      "name": "The Diviner's Den",
+      "difficulty": 4,
+      "character": {
+        "name": "Elaria the Diviner",
+        "role": "Elaria interprets visions and prophecies, her sight once touched upon the events surrounding Lyra.",
+        "alignment": "Neutral Good",
+        "initial_trust_level": 4,
+        "key_interaction": "The player must bring together insights from previous encounters to untangle a prophecy that Elaria had foresighted about the outcome of Lyra’s actions. Only then will she provide her vision's details."
+      }
+    },
+    {
+      "name": "The Enchanter's Elysium",
+      "difficulty": 5,
+      "character": {
+        "name": "Zerith the Enchanter",
+        "role": "Zerith was Lyra's closest confidant and knows her darkest secret.",
+        "alignment": "True Neutral",
+        "initial_trust_level": 3,
+        "key_interaction": "The player must craft a story that weaves all unveiled truths, presenting a coherent narrative that aligns with all known facts. Zerith will then reveal Lyra's final choice and grant the key to the Tome of Eternal Life."
+      }
+    }
+  ]
+}

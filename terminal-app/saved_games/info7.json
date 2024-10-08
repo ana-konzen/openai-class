@@ -1,0 +1,62 @@
+{
+  "setting": "The game is set in a mythical and desolate underground labyrinth, rumored to be the last resting place of an ancient civilization's most treasured artifact. The labyrinth is devoid of life, save for the enigmatic characters who seem to be bound by a mysterious oath to protect the secret of the labyrinth. Each room you enter is a battle of wits and understanding rather than physical might, emphasizing a dialogue-driven interaction to uncover the secrets buried deep within these ancient walls.",
+  "mystery": "The labyrinth conceals a long-lost artifact believed to grant immense wisdom and power to the bearer. Each character holds a piece of the history of the artifact and why it was hidden away. The player must discover not only the origin and purpose of the artifact but also why the characters are bound to protect this secret, revealing a tale of betrayal, sacrifice, and redemption.",
+  "final_prize": "The artifact of eternal wisdom that allows the player to become a knowledge guardian, with insights into all historical and future events.",
+  "rooms": [
+    {
+      "name": "The Chamber of Echoes",
+      "difficulty": 1,
+      "character": {
+        "name": "Eldrin the Echo",
+        "role": "He reveals the initial story of the artifact and hints at its concealment reason.",
+        "alignment": "Neutral Good",
+        "initial_trust_level": 7,
+        "key_interaction": "Eldrin needs reassurance that the player is not seeking the artifact for personal gain. He tests the player's intent by asking about their purpose of entering the labyrinth."
+      }
+    },
+    {
+      "name": "The Hall of Mirrors",
+      "difficulty": 2,
+      "character": {
+        "name": "Seraphina the Reflective",
+        "role": "She uncovers the ancient betrayal that led to the artifact's sealing.",
+        "alignment": "Chaotic Neutral",
+        "initial_trust_level": 6,
+        "key_interaction": "Seraphina requires the player to interpret the reflections seen in the mirrors and their relation to the player's past encounters."
+      }
+    },
+    {
+      "name": "The Crypt of Memories",
+      "difficulty": 3,
+      "character": {
+        "name": "Garrick the Keeper",
+        "role": "He guards the knowledge of the sacrifice made to secure the artifact.",
+        "alignment": "Lawful Neutral",
+        "initial_trust_level": 5,
+        "key_interaction": "Garrick challenges the player with riddles that symbolize the sacrifices made, assessing the player's understanding of loss and duty."
+      }
+    },
+    {
+      "name": "The Chamber of Whispers",
+      "difficulty": 4,
+      "character": {
+        "name": "Liora the Whisperer",
+        "role": "She whispers secrets of the future impact of the artifact.",
+        "alignment": "True Neutral",
+        "initial_trust_level": 4,
+        "key_interaction": "Liora requires the player to prove their foresight by predicting the outcomes of their actions based on hints from previous rooms."
+      }
+    },
+    {
+      "name": "The Sanctuary of Truth",
+      "difficulty": 5,
+      "character": {
+        "name": "Cedric the Truthbinder",
+        "role": "The final custodian who holds the artifact's truth and tests the player's worthiness.",
+        "alignment": "Lawful Good",
+        "initial_trust_level": 3,
+        "key_interaction": "Cedric demands complete honesty from the player. He will only grant the key upon learning how each lesson from previous rooms has shaped the player's understanding of truth."
+      }
+    }
+  ]
+}

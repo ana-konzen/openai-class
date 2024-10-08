@@ -1,0 +1,62 @@
+{
+  "setting": "In the ancient and forgotten city of Eldra, a hushed whisper persists among its ruined halls. Long abandoned by its inhabitants after whispers of a curse spread, Eldra sits cloaked in mystical fog, hiding relics of untold power. Adventurers seeking fame and fortune venture into its depths, drawn by the promise of a legendary artifact – the Eternal Lumina, said to reveal the secrets of the universe. Lush greenery reclaims much of the city's architecture, creating an eerie, yet beautiful, maze.",
+  "mystery": "The once-thriving city of Eldra fell curse-bound overnight, its populace vanished without a trace. Rumor has it that betrayal within the ruling counsel led to the release of a forbidden magic, sealing the city's fate. The player's task is to unravel who betrayed Eldra and why, piecing together fragmented tales and forgotten truths from the city's spectral echoes.",
+  "final_prize": "The Eternal Lumina, a gem of immense power that holds the wisdom of the ages and the key to undo the curse on Eldra, restoring it to its former glory.",
+  "rooms": [
+    {
+      "name": "Whispering Atrium",
+      "difficulty": 1,
+      "character": {
+        "name": "Kieran the Caretaker",
+        "role": "Keeper of forgotten legends",
+        "alignment": "Neutral",
+        "trust_level": 8,
+        "key_interaction": "Convince Kieran of your intentions to restore Eldra, and he will share a map containing hidden paths to the next room."
+      }
+    },
+    {
+      "name": "The Echoing Gallery",
+      "difficulty": 2,
+      "character": {
+        "name": "Sirena the Silent",
+        "role": "Guardian of the second truth",
+        "alignment": "Good",
+        "trust_level": 6,
+        "key_interaction": "Decipher the ancient melodies she hums, which unveil a hidden truth about the counsel's betrayal."
+      }
+    },
+    {
+      "name": "Garden of Shadows",
+      "difficulty": 3,
+      "character": {
+        "name": "Kael the Botanist",
+        "role": "Witness to the counsel's quarrel",
+        "alignment": "Chaotic Neutral",
+        "trust_level": 5,
+        "key_interaction": "Persuade him to share his memories of the night Eldra was cursed, revealing a key suspect."
+      }
+    },
+    {
+      "name": "The Star Chamber",
+      "difficulty": 4,
+      "character": {
+        "name": "Vael the Stargazer",
+        "role": "Archivist and keeper of celestial records",
+        "alignment": "Neutral",
+        "trust_level": 4,
+        "key_interaction": "Interpret his cryptic astrological insights, which point to the archival records of betrayal hidden in constellations."
+      }
+    },
+    {
+      "name": "Chamber of Reflections",
+      "difficulty": 5,
+      "character": {
+        "name": "Liora the Oracle",
+        "role": "Final guardian of the Eternal Lumina",
+        "alignment": "Good",
+        "trust_level": 3,
+        "key_interaction": "Solve her riddles of identity and truth, which test the player's understanding of the narrative and intentions."
+      }
+    }
+  ]
+}
