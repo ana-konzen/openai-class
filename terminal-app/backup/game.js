@@ -3,9 +3,7 @@
  * A dungeon-crawler RPG game in your computer's terminal, using ChatGPT.
  */
 
-import ansiEscapes from "npm:ansi-escapes"; //library of ansiEscapes to manipulate the terminal
 import * as process from "node:process"; //Node module to control current Node process and create Streams
-import boxen from "npm:boxen@7.1.1"; //library for terminal boxes
 import * as readline from "node:readline"; //Node module to read data from a Stream
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts"; //for text colors, from Cliffy
 
@@ -13,47 +11,59 @@ import {
   createGame,
   createMessage,
   createDialogue,
-  createFinalMessage,
-  createInitialMessage,
+  createEpilogue,
+  createPrologue,
 } from "./chats.js"; //ChatGPT prompts and other utility functions for the game
 
-import { randomInt, splitSentences } from "./util.js";
+import { randomInt, splitSentences, getOverlaps } from "./util.js";
 
 import {
-  Chamber,
+  placeAt,
+  renderMainCharacter,
+  showCursor,
+  hideCursor,
+  eraseScreen,
+  clearScreen,
+} from "./ansi.js";
+
+import {
   createNarrativeBox,
   createDialogueBox,
   writeMessage,
 } from "./components.js";
 
+import { Chamber } from "./chamber.js";
+
 const numChambers = 5;
-const chambers = [];
 const chatHistory = [];
 
 let level = 0;
-let horMov = 0;
-let verMov = 0;
+let playerX = 0;
+let playerY = 0;
 let dialogueIndex = 0;
 
 let dialogue;
+let playerOverlaps;
 
 let talkMenu = false;
 let doorLocked = true;
-let finalMessage;
+let epilogue;
 let finalChamber = false;
 let firstChamber = true;
 
-const gameInfo = await createGame(numChambers);
+const jsonStr = await Deno.readTextFile("game_info.json");
+
+// const gameInfo = await createGame(numChambers);
+const gameInfo = JSON.parse(jsonStr);
 
 const chambersInfo = gameInfo.chambers;
 
-let firstMessage = await createInitialMessage(gameInfo, numChambers);
-let firstSentences = splitSentences(firstMessage);
+// const prologue = await createPrologue(gameInfo, numChambers);
+const prologue = `${gameInfo.setting}  ${gameInfo.mystery}  ${gameInfo.finalPrize}`;
+const prologueSentences = splitSentences(prologue);
 
 chatHistory.push({
-  chamber: "introduction",
-  character: "the narrator",
-  chat: firstMessage,
+  prologue: prologue,
 });
 
 let messages = await createMessage(
@@ -63,60 +73,50 @@ let messages = await createMessage(
   numChambers
 );
 
-let offset = 0;
-for (let i = 0; i < numChambers; i++) {
-  let w = randomInt(6, 15) * 2;
-  let newChamber = new Chamber(
-    w,
-    randomInt(10, 12),
-    i + offset,
-    randomInt(5, 8)
-  );
-  chambers.push(newChamber);
-  if (i > 0) {
-    newChamber.door2 = true;
-    newChamber.door2Y = chambers[i - 1].doorY;
-  }
-  offset += w;
-}
+const chambers = createChambers();
 
-initializeGame();
+process.stdin.resume();
+
+readline.emitKeypressEvents(process.stdin);
+if (process.stdin.isTTY) process.stdin.setRawMode(true);
+
+eraseScreen();
+hideCursor();
+
+chambers[0].create();
+
+eraseScreen();
+hideCursor();
+
+createNarrativeBox(prologueSentences, 0);
 
 process.stdin.on("keypress", async (str, key) => {
-  process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
+  eraseScreen();
+  hideCursor();
   if (firstChamber) {
-    process.stdout.write(ansiEscapes.cursorTo(0, 4));
+    placeAt(0, 4);
 
-    if (key.name === "right" && dialogueIndex < firstSentences.length - 1) {
+    if (key.name === "right" && dialogueIndex < prologueSentences.length - 1) {
       dialogueIndex++;
     }
     if (key.name === "left" && dialogueIndex > 0) {
       dialogueIndex--;
     }
-    createNarrativeBox(firstSentences, dialogueIndex);
-    if (dialogueIndex === firstSentences.length - 1) {
-      process.stdout.write(ansiEscapes.cursorTo(0, 25));
-      console.log(
-        boxen("press 'space' to start your adventure!", {
-          float: "center",
-          borderStyle: "none",
-        })
-      );
-    }
+    createNarrativeBox(prologueSentences, dialogueIndex, "prologue");
 
     if (key.name === "space") {
       firstChamber = false;
-      horMov = chambers[0].x + 1;
-      verMov = chambers[0].y + 1;
+      playerX = chambers[0].x + 1;
+      playerY = chambers[0].y + 1;
       chambers[0].create();
-      process.stdout.write(ansiEscapes.cursorTo(horMov, verMov));
-      writeMainCharacter();
+      renderMainCharacter(playerX, playerY);
     }
   } else {
     let currentChamber = chambers[level];
+    playerOverlaps = getOverlaps(currentChamber, playerX, playerY);
     let character = chambersInfo[level].character;
     let trust = character.trustLevel;
-    process.stdout.write(ansiEscapes.clearScreen);
+    clearScreen();
     writeMessage(`${level + 1}: ${chambersInfo[level].name}`);
     if (key.name === "c" || trust >= 10) {
       writeMessage(colors.green("The character gave you a key!"), 4);
@@ -124,46 +124,24 @@ process.stdin.on("keypress", async (str, key) => {
     }
     if (!talkMenu) {
       if (key.name === "d" || key.name === "right") {
-        if (horMov < currentChamber.x + currentChamber.w - 3) {
-          if (
-            horMov !== currentChamber.characterX - 2 ||
-            verMov !== currentChamber.characterY
-          )
-            horMov += 2;
-        }
+        if (!playerOverlaps.wall.right && !playerOverlaps.npc.right)
+          playerX += 2;
       }
 
       if (key.name === "a" || key.name === "left") {
-        if (horMov > currentChamber.x + 1) {
-          if (
-            horMov !== currentChamber.characterX + 1 ||
-            verMov !== currentChamber.characterY
-          )
-            horMov -= 2;
-        }
+        if (!playerOverlaps.wall.left && !playerOverlaps.npc.left) playerX -= 2;
       }
 
       if (key.name === "s" || key.name === "down") {
-        if (verMov < currentChamber.y + currentChamber.h - 2) {
-          if (
-            verMov !== currentChamber.characterY - 1 ||
-            horMov !== currentChamber.characterX
-          )
-            verMov++;
-        }
+        if (!playerOverlaps.wall.bottom && !playerOverlaps.npc.bottom)
+          playerY++;
       }
       if (key.name === "w" || key.name === "up") {
-        if (verMov > currentChamber.y + 1) {
-          if (
-            verMov !== currentChamber.characterY + 1 ||
-            horMov !== currentChamber.characterX
-          )
-            verMov--;
-        }
+        if (!playerOverlaps.wall.top && !playerOverlaps.npc.top) playerY--;
       }
       if (
-        verMov === currentChamber.doorY &&
-        horMov >= currentChamber.doorX - 3
+        playerY === currentChamber.exitY &&
+        playerX >= currentChamber.exitX - 3
       ) {
         if (doorLocked) {
           writeMessage(colors.red("The door is locked"), 4);
@@ -184,15 +162,14 @@ process.stdin.on("keypress", async (str, key) => {
             );
             doorLocked = true;
             if (finalChamber) {
-              process.stdout.write(
-                ansiEscapes.eraseScreen + ansiEscapes.cursorHide
-              );
-              finalMessage = await createFinalMessage(
+              eraseScreen();
+              hideCursor();
+              epilogue = await createEpilogue(
                 gameInfo,
                 chatHistory,
                 numChambers
               );
-              chatHistory.push({ finalMessage: finalMessage });
+              chatHistory.push({ epilogue: epilogue });
               dialogueIndex = 0;
               talkMenu = true;
             }
@@ -200,19 +177,16 @@ process.stdin.on("keypress", async (str, key) => {
         }
       }
       if (
-        verMov <= currentChamber.characterY + 1 &&
-        verMov >= currentChamber.characterY - 1 &&
-        horMov >= currentChamber.characterX - 3 &&
-        horMov <= currentChamber.characterX + 2
+        playerY <= currentChamber.npcY + 1 &&
+        playerY >= currentChamber.npcY - 1 &&
+        playerX >= currentChamber.npcX - 3 &&
+        playerX <= currentChamber.npcX + 2
       ) {
         writeMessage("Press 'space' to talk", 4);
 
         if (key.name === "space") {
-          createchambers();
-          process.stdout.write(
-            ansiEscapes.cursorForward(horMov) + ansiEscapes.cursorDown(verMov)
-          );
-          writeMainCharacter();
+          renderChambers();
+          renderMainCharacter(playerX, playerY);
           dialogue = await createDialogue(
             chambersInfo[level],
             messages,
@@ -220,7 +194,7 @@ process.stdin.on("keypress", async (str, key) => {
             chatHistory,
             numChambers
           );
-          process.stdout.write(ansiEscapes.cursorHide);
+          hideCursor();
           dialogueIndex = 0;
           talkMenu = true;
         }
@@ -234,15 +208,12 @@ process.stdin.on("keypress", async (str, key) => {
         talkMenu = false;
       }
     }
-    createchambers();
+    renderChambers();
 
-    process.stdout.write(
-      ansiEscapes.cursorForward(horMov) + ansiEscapes.cursorDown(verMov)
-    );
-    writeMainCharacter();
+    renderMainCharacter(playerX, playerY);
 
     if (talkMenu && !finalChamber && !firstChamber) {
-      process.stdout.write(ansiEscapes.cursorTo(0, 0));
+      placeAt(0, 0);
       let sentences = splitSentences(dialogue);
       if (key.name === "right" && dialogueIndex < sentences.length - 1) {
         dialogueIndex++;
@@ -253,8 +224,8 @@ process.stdin.on("keypress", async (str, key) => {
       createDialogueBox(sentences, dialogueIndex, currentChamber, character);
       if (key.name === "t") {
         dialogueIndex = 0;
-        process.stdout.write(ansiEscapes.cursorShow);
-        process.stdout.write(ansiEscapes.cursorTo(0, 43));
+        showCursor();
+        placeAt(0, 43);
         let playerResponse = prompt("Your response:");
         if (key.name === "return") {
           dialogueIndex = 0;
@@ -269,33 +240,35 @@ process.stdin.on("keypress", async (str, key) => {
           numChambers
         );
         dialogueIndex = 0;
-        process.stdout.write(ansiEscapes.cursorHide);
-        process.stdout.write(ansiEscapes.cursorTo(0, 0));
+        hideCursor();
+        placeAt(0, 0);
       }
-      process.stdout.write(ansiEscapes.cursorTo(0, 0));
+      placeAt(0, 0);
     }
 
-    createchambers();
+    renderChambers();
 
-    process.stdout.write(
-      ansiEscapes.cursorForward(horMov) + ansiEscapes.cursorDown(verMov)
-    );
-    writeMainCharacter();
+    renderMainCharacter(playerX, playerY);
 
     if (talkMenu && finalChamber) {
-      process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
-      let finalSentences = splitSentences(finalMessage);
-      if (key.name === "right" && dialogueIndex < finalSentences.length - 1) {
+      eraseScreen();
+      hideCursor();
+      let epilogueSentences = splitSentences(epilogue);
+      if (
+        key.name === "right" &&
+        dialogueIndex < epilogueSentences.length - 1
+      ) {
         dialogueIndex++;
       }
       if (key.name === "left" && dialogueIndex > 0) {
         dialogueIndex--;
       }
-      createNarrativeBox(finalSentences, dialogueIndex);
+      createNarrativeBox(epilogueSentences, dialogueIndex, "epilogue");
     }
   }
   if (key.ctrl === true && key.name === "c") {
-    process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorShow);
+    eraseScreen();
+    showCursor();
     let chatObject = { history: chatHistory };
     let jsonStr = JSON.stringify(chatObject);
     await Deno.writeTextFile("chat_history.json", jsonStr);
@@ -303,11 +276,7 @@ process.stdin.on("keypress", async (str, key) => {
   }
 });
 
-function writeMainCharacter() {
-  console.log("[]");
-}
-
-function createchambers() {
+function renderChambers() {
   for (let i = level; i >= 0; i--) {
     chambers[i].create();
   }
@@ -321,21 +290,23 @@ function addLevel() {
   }
 }
 
-function initializeGame() {
-  process.stdin.resume();
-
-  readline.emitKeypressEvents(process.stdin);
-  if (process.stdin.isTTY) process.stdin.setRawMode(true);
-
-  process.stdout.write(ansiEscapes.clearScreen + ansiEscapes.cursorHide);
-
-  chambers[0].create();
-
-  process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
-
-  createNarrativeBox(firstSentences, 0);
-
-  // process.stdout.write(ansiEscapes.cursorTo(horMov, verMov));
-  // writeMainCharacter();
-  // process.stdout.write(ansiEscapes.eraseScreen + ansiEscapes.cursorHide);
+function createChambers() {
+  const chambers = [];
+  let offset = 0;
+  for (let i = 0; i < numChambers; i++) {
+    let w = randomInt(6, 15) * 2;
+    let newChamber = new Chamber(
+      w,
+      randomInt(10, 12),
+      i + offset,
+      randomInt(5, 8)
+    );
+    chambers.push(newChamber);
+    if (i > 0) {
+      newChamber.entrance = true;
+      newChamber.entranceY = chambers[i - 1].exitY;
+    }
+    offset += w;
+  }
+  return chambers;
 }

@@ -46,16 +46,6 @@ interface SpinnerOptions {
   errorMessage?: string;
 }
 
-export async function promptGPT(
-  prompt: string,
-  params: Partial<OpenAIChatParams> = {},
-  options: Partial<SpinnerOptions> = {}
-): Promise<string> {
-  params.messages = [{ role: "user", content: prompt }];
-  const message = await gpt(params, options);
-  return (message.content ?? "").trim();
-}
-
 export async function gpt(
   params: Partial<OpenAIChatParams> = {},
   spinnerOptions: Partial<SpinnerOptions> = {}
@@ -137,17 +127,7 @@ export async function gpt(
       let message = spinnerOptions.successMessage ?? "";
       if (spinnerOptions.showStats) {
         message +=
-          " " +
-          colors.gray(
-            formatStats(
-              chatParams.model,
-              p_tokens,
-              c_tokens,
-              seconds,
-              cost,
-              totalCost
-            )
-          );
+          " " + colors.gray(formatStats(chatParams.model, p_tokens, c_tokens, seconds, cost, totalCost));
       }
       // spinner.stopWithFlair(message.trim(), colors.green("✔"));
       spinner.stop();
@@ -189,53 +169,4 @@ function formatStats(
   const t_costF = roundToDecimalPlaces(t_cost, 2, 4);
   const secondsF = roundToDecimalPlaces(seconds, 2);
   return `${m} ${p_tokens}/${c_tokens}t ${secondsF}s $${costF} $${t_costF}`;
-}
-
-type DalleImageParams = OpenAI.Images.ImageGenerateParams;
-
-export async function promptDalle(
-  prompt: string,
-  params: Partial<DalleImageParams> = {}
-): Promise<OpenAI.Images.Image> {
-  if (!openai) initOpenAI();
-
-  const defaultParams: DalleImageParams = {
-    prompt: "",
-    model: "dall-e-3",
-    quality: "standard", // "standard" or "hd"
-    response_format: "url", // "url" or "b64_json"
-    style: "vivid", // "vivid" or "natural", natural is kinda bad.
-    size: "1024x1024",
-  };
-
-  const dalleParams: DalleImageParams = {
-    ...defaultParams,
-    ...params,
-    prompt,
-  };
-
-  const startTime = performance.now();
-
-  const spinner = new Kia({ text: dalleParams.model as string });
-  spinner.start();
-
-  const imageResponse = await openai.images.generate(dalleParams);
-
-  const seconds = ((performance.now() - startTime) / 1000).toFixed(2);
-
-  const hd = dalleParams.quality !== "standard";
-  const big = dalleParams.size !== "1024x1024";
-  let cost = 0.04;
-  if (hd && !big) cost = 0.08;
-  if (!hd && big) cost = 0.08;
-  if (hd && big) cost = 0.12;
-
-  spinner.stopWithFlair(
-    colors.gray(`${dalleParams.model} ${seconds}s $${cost}`),
-    colors.green("✔")
-  );
-
-  log.info(imageResponse.data[0].revised_prompt);
-
-  return imageResponse.data[0];
 }

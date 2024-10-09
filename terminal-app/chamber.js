@@ -10,7 +10,7 @@ export class Chamber {
     this.h = h;
     this.npcX = randomInt(this.x + 2, this.x + this.w - 5);
     this.npcY = randomInt(this.y + 2, this.y + this.h - 4);
-    this.exitX = this.x + this.w - 1;
+    this.exitX = this.x + this.w;
     this.exitY = randomInt(this.y + 2, this.y + this.h - 4);
 
     this.entrance = false;

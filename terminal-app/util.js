@@ -6,7 +6,7 @@ export function splitSentences(str) {
   return str.match(/[^\.!\?]+[\.!\?]+[\n\r]*/g);
 }
 
-export function getPlayerOverlaps(currentChamber, playerX, playerY) {
+export function getOverlaps(currentChamber, playerX, playerY) {
   return {
     wall: {
       right: playerX >= currentChamber.x + currentChamber.w - 3,
@@ -16,13 +16,13 @@ export function getPlayerOverlaps(currentChamber, playerX, playerY) {
     },
     npc: {
       right:
-        playerX >= currentChamber.npcX - 2 && playerY === currentChamber.npcY,
+        (playerX === currentChamber.npcX - 2 || playerX === currentChamber.npcX - 3) &&
+        playerY === currentChamber.npcY - 1,
       left:
-        playerX <= currentChamber.npcX + 2 && playerY === currentChamber.npcY,
-      top:
-        playerY <= currentChamber.npcY + 1 && playerX === currentChamber.npcX,
-      bottom:
-        playerY >= currentChamber.npcY - 1 && playerX === currentChamber.npcX,
+        (playerX === currentChamber.npcX + 1 || playerX === currentChamber.npcX) &&
+        playerY === currentChamber.npcY - 1,
+      top: playerY === currentChamber.npcY && playerX === currentChamber.npcX - 1,
+      bottom: playerY === currentChamber.npcY - 2 && playerX === currentChamber.npcX - 1,
     },
   };
 }
