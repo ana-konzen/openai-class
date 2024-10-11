@@ -180,6 +180,7 @@ function renderChambers() {
     chambers[i].create();
   }
 }
+
 async function addLevel() {
   level++;
   if (level > numChambers - 1) {
