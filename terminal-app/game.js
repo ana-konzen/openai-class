@@ -17,7 +17,7 @@ import { createNarrativeBox, createDialogueBox, writeMessage } from "./component
 
 import { Character } from "./character.js";
 
-import { Chamber } from "./chamber.js";
+import { createChambers } from "./chamber.js";
 
 const numChambers = 5;
 const chatHistory = [];
@@ -35,8 +35,8 @@ let doorLocked = true;
 let epilogue;
 let finalChamber = false;
 let currentChamber;
-
-let playerResponse; // player's response to the NPC
+let chamberColor = "white";
+let doorColor = 0xffffff;
 
 const jsonStr = await Deno.readTextFile("game_info.json");
 
@@ -55,10 +55,10 @@ chatHistory.push({
 
 let messages = await createMessage(chambersInfo[level], gameInfo, chatHistory, numChambers);
 
-const chambers = createChambers();
+const chambers = createChambers(numChambers);
 
-eraseScreen();
-hideCursor();
+// eraseScreen();
+// hideCursor();
 
 chambers[0].create();
 
@@ -73,22 +73,35 @@ for await (const event of keypress()) {
   if (player.inPrologue) {
     placeAt(0, 4);
 
+    //create narrative box
     if (event.key === "right" && dialogueIndex < prologueSentences.length - 1) dialogueIndex++;
     if (event.key === "left" && dialogueIndex > 0) dialogueIndex--;
 
     createNarrativeBox(prologueSentences, dialogueIndex, "prologue");
 
+    //start the main game after space if pressed
     if (event.key === "space") startGame();
   } else {
+    //game started
     clearScreen();
-    currentChamber = chambers[level];
+    currentChamber = chambers[level]; //level defaults to 0
+
     player.placeInChamber(currentChamber);
+
     playerOverlaps = getOverlaps(currentChamber, player.x, player.y);
+
     const npc = chambersInfo[level].character;
+
     trust = npc.trustLevel;
-    writeMessage(`${level + 1}: ${chambersInfo[level].name}`);
+
+    writeMessage(`${level + 1}: ${chambersInfo[level].name}`); //room title
+
     if ((event.key === "c" && !event.ctrlKey) || trust >= 10) unlockDoor();
+
+    //if player is moving
     if (player.moving) {
+      player.color = 0xffffff;
+
       if (event.key === "d" || event.key === "right")
         if (!playerOverlaps.wall.right && !playerOverlaps.npc.right) player.x += 2;
 
@@ -105,15 +118,16 @@ for await (const event of keypress()) {
         if (doorLocked) writeMessage(colors.red("The door is locked"), 4);
         else {
           writeMessage(colors.green("The door is unlocked! Press 'e' to go to the next chamber"), 4);
-          if (event.key === "e") await addLevel();
+          if (event.key === "e") await addLevel(); //add level if player is close to exit and door is unlocked
         }
       }
+
       if (player.isCloseToNPC()) {
         writeMessage("Press 'space' to talk", 4);
-        if (event.key === "space") await startDialogue();
+        if (event.key === "space") await startDialogue(); //if player is moving (not in dialogue), start dialogue
       }
     } else {
-      if (event.key === "space") leaveDialogue();
+      if (event.key === "space") leaveDialogue(); //if player is in dialogue, leave dialogue
     }
     renderChambers();
 
@@ -121,7 +135,7 @@ for await (const event of keypress()) {
 
     if (player.inDialogue) {
       placeAt(0, 0);
-      let sentences = splitSentences(dialogue);
+      const sentences = splitSentences(dialogue);
       if (event.key === "right" && dialogueIndex < sentences.length - 1) dialogueIndex++;
       if (event.key === "left" && dialogueIndex > 0) dialogueIndex--;
 
@@ -130,10 +144,10 @@ for await (const event of keypress()) {
       if (event.key === "t") startTalking();
 
       if (player.talking) {
-        playerResponse = await Input.prompt({
-          message: "Your response:",
-        });
+        player.color = 0xffffff;
+        const playerResponse = await Input.prompt({ message: "Your response:" });
         await finishTalking(playerResponse);
+        dialogueIndex = 0;
       }
       placeAt(0, 0);
     }
@@ -145,7 +159,7 @@ for await (const event of keypress()) {
     if (player.inEpilogue) {
       eraseScreen();
       hideCursor();
-      let epilogueSentences = splitSentences(epilogue);
+      const epilogueSentences = splitSentences(epilogue);
       if (event.key === "right" && dialogueIndex < epilogueSentences.length - 1) dialogueIndex++;
 
       if (event.key === "left" && dialogueIndex > 0) dialogueIndex--;
@@ -161,6 +175,8 @@ for await (const event of keypress()) {
 
 function renderChambers() {
   for (let i = level; i >= 0; i--) {
+    chambers[i].color = chamberColor;
+    chambers[i].doorColor = doorColor;
     chambers[i].create();
   }
 }
@@ -182,22 +198,6 @@ async function addLevel() {
   }
 }
 
-function createChambers() {
-  const chambers = [];
-  let offset = 0;
-  for (let i = 0; i < numChambers; i++) {
-    let w = randomInt(6, 15) * 2;
-    let newChamber = new Chamber(w, randomInt(10, 12), i + offset, randomInt(5, 8));
-    chambers.push(newChamber);
-    if (i > 0) {
-      newChamber.entrance = true;
-      newChamber.entranceY = chambers[i - 1].exitY;
-    }
-    offset += w;
-  }
-  return chambers;
-}
-
 async function endGame() {
   eraseScreen();
   showCursor();
@@ -214,6 +214,9 @@ function unlockDoor() {
 async function startDialogue() {
   player.moving = false;
   hideCursor();
+  chamberColor = "gray";
+  doorColor = 0x808080;
+  player.color = 0x808080;
   renderChambers();
   player.render();
   dialogue = await createDialogue(chambersInfo[level], messages, trust, chatHistory, numChambers);
@@ -230,6 +233,9 @@ function startGame() {
 }
 
 function leaveDialogue() {
+  chamberColor = "white";
+  doorColor = 0xffffff;
+  player.color = 0xffffff;
   messages.push({
     role: "user",
     content: "Hello, I'm back.",
@@ -238,6 +244,7 @@ function leaveDialogue() {
 }
 
 async function startTalking() {
+  player.color = 0xffffff;
   player.talking = true;
   player.moving = false;
   dialogueIndex = 0;
@@ -248,6 +255,7 @@ async function startTalking() {
 async function finishTalking(playerResponse) {
   hideCursor();
   player.talking = false;
+  player.color = 0x808080;
   dialogueIndex = 0;
   messages.push({ role: "user", content: playerResponse });
   chatHistory.push(`Player: ${playerResponse}`);

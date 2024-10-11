@@ -2,7 +2,7 @@
  * by Ana Konzen
  */
 
-import { gpt } from "./openai.ts"; //GPT util library by Justin Bakse
+import { gpt, gptDialogue } from "./openai.js"; //GPT util library by Justin Bakse
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts"; //for text colors, from Cliffy
 import { writeMessage } from "./components.js";
 
@@ -67,16 +67,14 @@ export async function createGame(numChambers) {
                   },
                   character: {
                     type: "object",
-                    description:
-                      "The details about the character the player encounters in the chamber.",
+                    description: "The details about the character the player encounters in the chamber.",
                     properties: {
                       name: {
                         type: "string",
                       },
                       role: {
                         type: "string",
-                        description:
-                          "The role of the character in the mystery and overall story.",
+                        description: "The role of the character in the mystery and overall story.",
                       },
                       alignment: {
                         type: "string",
@@ -95,13 +93,7 @@ export async function createGame(numChambers) {
                           Consider the difficulty level. If it's 1, the player has no specific knowledge and has not talked to any characters.`,
                       },
                     },
-                    required: [
-                      "name",
-                      "role",
-                      "alignment",
-                      "initialTrustLevel",
-                      "keyInteraction",
-                    ],
+                    required: ["name", "role", "alignment", "initialTrustLevel", "keyInteraction"],
                     additionalProperties: false,
                   },
                 },
@@ -118,16 +110,14 @@ export async function createGame(numChambers) {
     },
   });
 
-  await Deno.writeTextFile(
-    "game_info.json",
-    JSON.stringify(result.parsed, null, 2)
-  );
+  await Deno.writeTextFile("game_info.json", JSON.stringify(result.parsed, null, 2));
 
   return result.parsed;
 }
 
 export async function createPrologue(gameInfo, numChambers) {
   const response = await gpt({
+    model: "gpt-4o",
     messages: [
       {
         role: "system",
@@ -158,6 +148,7 @@ export async function createPrologue(gameInfo, numChambers) {
 
 export async function createEpilogue(gameInfo, chatHistory, numChambers) {
   const response = await gpt({
+    model: "gpt-4o",
     messages: [
       {
         role: "system",
@@ -182,12 +173,7 @@ export async function createEpilogue(gameInfo, chatHistory, numChambers) {
   return response.content;
 }
 
-export async function createMessage(
-  chamber,
-  gameInfo,
-  chatHistory,
-  numChambers
-) {
+export async function createMessage(chamber, gameInfo, chatHistory, numChambers) {
   const character = chamber.character;
   const message = [
     {
@@ -220,8 +206,7 @@ export async function createMessage(
 export async function createDialogue(chamber, messages, trust, chatHistory) {
   const character = chamber.character;
   const messageHis = [];
-  if (character.trustLevel === undefined)
-    character.trustLevel = character.initialTrustLevel;
+  if (character.trustLevel === undefined) character.trustLevel = character.initialTrustLevel;
   trust = character.trustLevel;
 
   function beNeutral() {
@@ -296,7 +281,7 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
   ];
 
   let response;
-  let tool_response = await gpt({
+  let tool_response = await gptDialogue({
     model: "gpt-4o",
     messages: messages,
     tools: tools,
@@ -308,7 +293,8 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
     messages.push(tool_response);
     handleToolCalls(tool_response.tool_calls);
 
-    response = await gpt({
+    response = await gptDialogue({
+      model: "gpt-4o",
       messages: messages,
       max_tokens: 500,
     });
@@ -327,8 +313,7 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
   function handleToolCalls(tool_calls) {
     for (const tool_call of tool_calls) {
       const functionName = tool_call.function.name;
-      const functionresponse =
-        availableFunctions[functionName]?.() || "unknown function";
+      const functionresponse = availableFunctions[functionName]?.() || "unknown function";
       messages.push({
         tool_call_id: tool_call.id,
         role: "tool",

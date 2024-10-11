@@ -1,8 +1,10 @@
 import { moveTo } from "./ansi.js";
+import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts";
 
 export class Character {
   constructor(x, y) {
     this.symbol = "@";
+    this.color = 0xffffff;
     this.x = x;
     this.y = y;
     this.chamber;
@@ -28,7 +30,7 @@ export class Character {
   }
   render() {
     moveTo(this.x, this.y);
-    console.log(this.symbol);
+    console.log(colors.rgb24(this.symbol, this.color));
   }
   placeInChamber(currentChamber) {
     this.chamber = currentChamber;
