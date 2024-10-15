@@ -1,7 +1,8 @@
 import boxen from "npm:boxen@7.1.1"; //library for terminal boxes
-import { cursorTo, eraseLine, eraseDown, eraseEndLine } from "./ansi.js";
+import { cursorTo, eraseLine, eraseDown, eraseEndLine, clearScreen } from "./ansi.js";
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts";
 import { Cell, Row, Table } from "https://deno.land/x/cliffy@v1.0.0-rc.4/table/mod.ts";
+import figlet from "npm:figlet@1.6.0";
 
 export function renderNarrativeBox(sentences, dialogueIndex, type = "default") {
   cursorTo(0, 4);
@@ -109,4 +110,54 @@ export function renderMenu(options, currentChamber, x = 1, y = 22) {
   console.log(menuString);
 
   cursorTo(0, 0);
+}
+
+export function renderLandingPage() {
+  //asked chat gpt for help on how to center the figlet output
+
+  const { columns, rows } = Deno.consoleSize();
+
+  figlet.text("Dungeon Mystery", { font: "poison", width: 80, whitespaceBreak: true }, function (err, data) {
+    if (err) {
+      console.log("Something went wrong...");
+      console.dir(err);
+      return;
+    }
+
+    const lines = data.split("\n");
+    cursorTo(0, 0);
+
+    lines.forEach((line) => {
+      const padding = Math.max(0, Math.floor((columns - line.length) / 2));
+      console.log(" ".repeat(padding) + line);
+    });
+  });
+}
+
+export function renderGameOverPage() {
+  clearScreen();
+
+  const { columns, rows } = Deno.consoleSize();
+
+  figlet.text("Game Over", { font: "poison", width: 80, whitespaceBreak: true }, function (err, data) {
+    if (err) {
+      console.log("Something went wrong...");
+      console.dir(err);
+      return;
+    }
+
+    const lines = data.split("\n");
+
+    lines.forEach((line) => {
+      const padding = Math.max(0, Math.floor((columns - line.length) / 2));
+      console.log(" ".repeat(padding) + line);
+    });
+  });
+  cursorTo(0, 26);
+  console.log(
+    boxen(colors.red("You were kicked out of the dungeon.\nPress 'control + c' to exit the game"), {
+      float: "center",
+      borderStyle: "none",
+    })
+  );
 }

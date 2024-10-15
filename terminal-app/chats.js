@@ -2,12 +2,12 @@
  * by Ana Konzen
  */
 
-import { gpt, gptDialogue } from "./openai.js"; //GPT util library by Justin Bakse
+import { gpt, gptDialogue, gptMain } from "./openai.js"; //GPT util library by Justin Bakse
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts"; //for text colors, from Cliffy
 import { renderMessage } from "./components.js";
 
 export async function createGame(numChambers) {
-  const result = await gpt({
+  const result = await gptMain({
     model: "gpt-4o",
     messages: [
       {
@@ -120,7 +120,7 @@ export async function createGame(numChambers) {
 }
 
 export async function createPrologue(gameInfo, numChambers) {
-  const response = await gpt({
+  const response = await gptMain({
     model: "gpt-4o",
     messages: [
       {
@@ -240,6 +240,8 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
     trust++;
     let summary = `The character's trust went up! The current level of trust is ${trust}`;
     renderMessage(colors.green("The character's trust went up!"));
+    if (trust === 10)
+      renderMessage(colors.green("The character's trust reached 10 and you received the key!"));
     return summary;
   }
 
@@ -247,6 +249,10 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
     trust--;
     let summary = `The character's trust went down! The current level of trust is ${trust}`;
     renderMessage(colors.red("The character's trust went down!"));
+    if (trust <= 1)
+      renderMessage(
+        colors.red("Be careful! If the trust level goes below 0, you will be kicked out of the dungeon!")
+      );
     return summary;
   }
 
@@ -302,7 +308,7 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
   ];
 
   let response;
-  let tool_response = await gptDialogue({
+  let tool_response = await gptDialogue(character.name, {
     model: "gpt-4o",
     messages: messages,
     tools: tools,
@@ -315,7 +321,7 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
     messages.push(tool_response);
     handleToolCalls(tool_response.tool_calls);
 
-    response = await gptDialogue({
+    response = await gptDialogue(character.name, {
       model: "gpt-4o",
       messages: messages,
       max_tokens: 500,

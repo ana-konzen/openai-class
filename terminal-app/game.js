@@ -7,19 +7,29 @@ import { keypress } from "https://deno.land/x/cliffy@v1.0.0-rc.4/keypress/mod.ts
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts";
 import { Input } from "https://deno.land/x/cliffy@v1.0.0-rc.4/prompt/mod.ts";
 
-import figlet from "npm:figlet@1.6.0";
-
 import { createGame, createMessage, createDialogue, createEpilogue, createPrologue } from "./chats.js"; //ChatGPT prompts and other utility functions for the game
 
 import { splitSentences, getOverlaps } from "./util.js";
 
 import { cursorTo, showCursor, hideCursor, eraseScreen, clearScreen, eraseDown } from "./ansi.js";
 
-import { renderNarrativeBox, renderDialogueBox, renderMessage, renderMenu } from "./components.js";
+import {
+  renderNarrativeBox,
+  renderDialogueBox,
+  renderMessage,
+  renderMenu,
+  renderLandingPage,
+  renderGameOverPage,
+} from "./components.js";
 
 import { Character } from "./character.js";
 
 import { createChambers } from "./chamber.js";
+
+eraseScreen();
+hideCursor();
+
+renderLandingPage();
 
 const numChambers = 5;
 const chatHistory = [];
@@ -47,7 +57,9 @@ let chamberColor = "white";
 const gray = 0x808080;
 const white = 0xffffff;
 const cyan = 0x48d1cc;
-let doorColor = white;
+const red = 0xff0000;
+const green = 0x00ff00;
+let exitColor = white;
 
 const jsonStr = await Deno.readTextFile("game_info.json");
 
@@ -65,40 +77,10 @@ chatHistory.push({
   prologue: prologue,
 });
 
-// eraseScreen();
-// hideCursor();
 let currentChamber = chambers[0];
 
-currentChamber.render();
 currentChamber.messages = await createMessage(chambersInfo[level], gameInfo, chatHistory, numChambers);
-
-eraseScreen();
 hideCursor();
-
-// renderNarrativeBox(prologueSentences, 0, "prologue");
-
-// const { columns, rows } = Deno.consoleSize();
-
-cursorTo(50, 10);
-figlet.text(
-  "Dungeon Mystery",
-  {
-    font: "poison",
-    horizontalLayout: "default",
-    verticalLayout: "default",
-    width: 80,
-    whitespaceBreak: true,
-  },
-  function (err, data) {
-    if (err) {
-      console.log("Something went wrong...");
-      console.dir(err);
-      return;
-    }
-    console.log(data);
-  }
-);
-renderMessage("Press any key to start", 22, 25);
 
 for await (const event of keypress()) {
   eraseScreen();
@@ -121,8 +103,8 @@ for await (const event of keypress()) {
     clearScreen();
     cursorTo(0, 0);
     currentChamber = chambers[room]; //level defaults to 0
-    // renderMessage(`${room + 1}: ${chambersInfo[room].name}`, currentChamber.x); //room title
     player.placeInChamber(currentChamber);
+    currentChamber.exitColor = white;
 
     playerOverlaps = getOverlaps(currentChamber, player.x, player.y);
 
@@ -131,6 +113,14 @@ for await (const event of keypress()) {
     trust = npc.trustLevel ?? npc.initialTrustLevel;
 
     if ((event.key === "c" && !event.ctrlKey) || trust >= 10) unlockDoor(currentChamber);
+    if (trust < 0 || event.key === "g") {
+      player.inNavigation = false;
+      player.inDialogue = false;
+      clearScreen();
+      renderGameOverPage();
+      // await endGame(false);
+      // break;
+    }
 
     //if player is moving
     if (player.inNavigation) {
@@ -150,7 +140,6 @@ for await (const event of keypress()) {
         if (!playerOverlaps.wall.top && !playerOverlaps.npc.top) player.y--;
 
       if (player.isCloseToExit()) {
-        // renderMessage("Press 'e' to open the door", 4);
         renderMenu(navActionsDoor, currentChamber);
         if (!currentChamber.locked && room === level)
           renderMessage(colors.green("The door is now unlocked!"));
@@ -158,6 +147,7 @@ for await (const event of keypress()) {
         if (event.key === "e") {
           if (currentChamber.locked) {
             renderMessage(colors.red("The door is locked"));
+            exitColor = red;
           } else {
             if (room === level) {
               await addLevel();
@@ -169,13 +159,11 @@ for await (const event of keypress()) {
       }
 
       if (player.isCloseToEntrance()) {
-        // renderMessage(colors.yellow("Press 'e' to go to previous chamber"), currentChamber.x, 4);
         renderMenu(navActionsDoor, currentChamber);
         if (event.key === "e") await goBack();
       }
 
       if (player.isCloseToNPC()) {
-        // renderMessage("Press 'space' to talk", currentChamber.x, 4);
         renderMenu(navActionsNpc, currentChamber);
         if (event.key === "t") {
           hideCursor();
@@ -191,6 +179,9 @@ for await (const event of keypress()) {
       }
     } else if (player.inDialogue) {
       renderMessage(`Trust: ${trust}`);
+      if (trust === 10) {
+        colors.green("You got the key!");
+      }
 
       cursorTo(0, 0);
 
@@ -203,12 +194,18 @@ for await (const event of keypress()) {
         renderMenu(listenActions, currentChamber);
       }
       renderMessage(`Trust: ${trust}`);
+      if (trust === 10) {
+        colors.green("You got the key!");
+      }
 
       renderDialogueBox(sentences, dialogueIndex, currentChamber, npc);
 
       if (dialogueIndex === sentences.length - 1) {
         renderMenu(listenActionsLast, currentChamber);
         renderMessage(`Trust: ${trust}`);
+        if (trust === 10) {
+          colors.green("You got the key!");
+        }
 
         if (event.key === "r") {
           renderMenu(talkActions, currentChamber);
@@ -230,6 +227,9 @@ for await (const event of keypress()) {
         renderDialogueBox(sentences, dialogueIndex, currentChamber, npc);
 
         renderMessage(`Trust: ${trust}`);
+        if (trust === 10) {
+          colors.green("You got the key!");
+        }
 
         if (event.key === "l") {
           leaveDialogue(currentChamber);
@@ -239,7 +239,7 @@ for await (const event of keypress()) {
 
       cursorTo(0, 0);
     }
-    // renderMessage(`${room + 1}: ${chambersInfo[room].name}`, currentChamber.x); //room title
+
     renderChambers();
     player.render();
   } else if (player.inEpilogue) {
@@ -262,11 +262,13 @@ function renderChambers() {
   for (let i = level; i >= 0; i--) {
     if (i === room) {
       chambers[i].color = chamberColor;
-      chambers[i].doorColor = doorColor;
+      if (!chambers[i].locked) chambers[i].exitColor = green;
+      if (chambers[i].locked) chambers[i].exitColor = exitColor;
       chambers[i].npcColor = cyan;
     } else {
       chambers[i].color = "gray";
-      chambers[i].doorColor = gray;
+      chambers[i].exitColor = gray;
+      chambers[i].entranceColor = gray;
       chambers[i].npcColor = gray;
     }
     chambers[i].render();
@@ -292,28 +294,18 @@ async function addLevel() {
   goToNextRoom(true);
 }
 
-async function goToNextRoom(firstTime = false) {
+async function goToNextRoom() {
   room++;
   if (room > numChambers - 1) room = numChambers - 1;
-  if (!firstTime) {
-    // chambers[room].messages.push({
-    //   role: "user",
-    //   content: `Hello, I'm back. Here's what I've been up to: ${chatHistory}`,
-    // });
-  }
 }
 
 async function goBack() {
   room--;
   if (room < 0) room = 0;
-  // chambers[room].messages.push({
-  //   role: "user",
-  //   content: `Hello, I'm back. Here's what I've been up to: ${chatHistory}`,
-  // });
 }
 
-async function endGame() {
-  eraseScreen();
+async function endGame(clear = true) {
+  if (clear) eraseScreen();
   showCursor();
   let chatObject = { history: chatHistory };
   let jsonStr = JSON.stringify(chatObject);
@@ -322,7 +314,7 @@ async function endGame() {
 
 function unlockDoor(chamber) {
   if (chamber.locked) renderMessage(colors.green("You received a key!"));
-  // doorLocked = false;
+  chamber.exitColor = green;
   chamber.locked = false;
 }
 
@@ -330,7 +322,7 @@ async function startDialogue(chamber) {
   hideCursor();
   player.inNavigation = false;
   chamberColor = "gray";
-  doorColor = gray;
+  chamber.entranceColor = gray;
   player.color = gray;
   renderChambers();
   player.render();
@@ -351,7 +343,7 @@ function startGame(currentChamber) {
 function leaveDialogue(chamber) {
   player.inDialogue = false;
   chamberColor = "white";
-  doorColor = white;
+  chamber.entranceColor = white;
   player.color = white;
   chamber.messages.push({
     role: "user",

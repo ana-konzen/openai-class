@@ -22,7 +22,8 @@ export class Chamber {
     this.entranceY = 0;
     this.entranceX = this.x + 1;
     this.color = "white";
-    this.doorColor = 0xffffff;
+    this.entranceColor = 0xffffff;
+    this.exitColor = 0xffffff;
     this.npcColor = 0x48d1cc;
 
     this.number = number;
@@ -40,15 +41,16 @@ export class Chamber {
         margin: { left: this.x, top: this.y },
         borderStyle: "classic",
         borderColor: this.color,
+        // backgroundColor: "yellow",
       })
     );
     cursorTo(this.npcX, this.npcY);
     console.log(colors.rgb24("&", this.npcColor));
     cursorTo(this.exitX, this.exitY);
-    console.log(colors.rgb24("%", this.doorColor));
+    console.log(colors.rgb24("%", this.exitColor));
     if (this.hasEntrance) {
       cursorTo(this.entranceX, this.entranceY);
-      console.log(colors.rgb24("%", this.doorColor));
+      console.log(colors.rgb24("%", this.entranceColor));
     }
 
     cursorTo(0, 0);
