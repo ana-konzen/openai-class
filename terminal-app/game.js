@@ -7,6 +7,8 @@ import { keypress } from "https://deno.land/x/cliffy@v1.0.0-rc.4/keypress/mod.ts
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts";
 import { Input } from "https://deno.land/x/cliffy@v1.0.0-rc.4/prompt/mod.ts";
 
+import figlet from "npm:figlet@1.6.0";
+
 import { createGame, createMessage, createDialogue, createEpilogue, createPrologue } from "./chats.js"; //ChatGPT prompts and other utility functions for the game
 
 import { splitSentences, getOverlaps } from "./util.js";
@@ -26,6 +28,7 @@ let level = 0;
 let room = 0;
 let dialogueIndex = 0;
 const navActions = ["[w][a][s][d] move"];
+const firstListenActions = ["[>] next"];
 const listenActions = ["[<] previous", "[>] next"];
 const listenActionsLast = ["[<] previous", colors.magenta("[r] reply"), "[l] leave"];
 const talkActions = ["[enter] confirm"];
@@ -72,7 +75,30 @@ currentChamber.messages = await createMessage(chambersInfo[level], gameInfo, cha
 eraseScreen();
 hideCursor();
 
-renderNarrativeBox(prologueSentences, 0, "prologue");
+// renderNarrativeBox(prologueSentences, 0, "prologue");
+
+// const { columns, rows } = Deno.consoleSize();
+
+cursorTo(50, 10);
+figlet.text(
+  "Dungeon Mystery",
+  {
+    font: "poison",
+    horizontalLayout: "default",
+    verticalLayout: "default",
+    width: 80,
+    whitespaceBreak: true,
+  },
+  function (err, data) {
+    if (err) {
+      console.log("Something went wrong...");
+      console.dir(err);
+      return;
+    }
+    console.log(data);
+  }
+);
+renderMessage("Press any key to start", 22, 25);
 
 for await (const event of keypress()) {
   eraseScreen();
@@ -87,7 +113,9 @@ for await (const event of keypress()) {
     renderNarrativeBox(prologueSentences, dialogueIndex, "prologue");
 
     //start the main game after space if pressed
-    if (event.key === "space") startGame(currentChamber);
+    if (dialogueIndex === prologueSentences.length - 1) {
+      if (event.key === "space") startGame(currentChamber);
+    }
   } else if (player.inNavigation || player.inDialogue) {
     //game started
     clearScreen();
@@ -155,48 +183,53 @@ for await (const event of keypress()) {
           hideCursor();
           const sentences = splitSentences(dialogue);
           hideCursor();
-          renderMenu(listenActions, currentChamber);
-          renderMessage(`Trust Level: ${trust}`);
+          renderMenu(firstListenActions, currentChamber);
+          renderMessage(`Trust: ${trust}`);
 
           renderDialogueBox(sentences, dialogueIndex, currentChamber, npc);
         }
       }
     } else if (player.inDialogue) {
-      renderMenu(listenActions, currentChamber);
-      renderMessage(`Trust Level: ${trust}`);
+      renderMessage(`Trust: ${trust}`);
 
       cursorTo(0, 0);
 
       let sentences = splitSentences(dialogue);
       if (event.key === "right" && dialogueIndex < sentences.length - 1) dialogueIndex++;
       if (event.key === "left" && dialogueIndex > 0) dialogueIndex--;
-      renderMessage(`Trust Level: ${trust}`);
+      if (dialogueIndex === 0) {
+        renderMenu(firstListenActions, currentChamber);
+      } else {
+        renderMenu(listenActions, currentChamber);
+      }
+      renderMessage(`Trust: ${trust}`);
 
       renderDialogueBox(sentences, dialogueIndex, currentChamber, npc);
 
       if (dialogueIndex === sentences.length - 1) {
         renderMenu(listenActionsLast, currentChamber);
-        renderMessage(`Trust Level: ${trust}`);
+        renderMessage(`Trust: ${trust}`);
 
         if (event.key === "r") {
           renderMenu(talkActions, currentChamber);
-          renderMessage(`Trust Level: ${trust}`);
+          renderMessage(`Trust: ${trust}`);
 
           renderDialogueBox(sentences, dialogueIndex, currentChamber, npc);
 
           startTalking();
           player.color = white;
-          const playerResponse = await Input.prompt({ message: "Your response:" });
+          const playerResponse = await Input.prompt({ message: "Your response:", prefix: "" });
           renderMenu(listenActions, currentChamber);
           await finishTalking(playerResponse, currentChamber);
           eraseDown();
           hideCursor();
         }
         renderMenu(listenActionsLast, currentChamber);
+        if (dialogueIndex === 0) renderMenu(firstListenActions, currentChamber);
         sentences = splitSentences(dialogue);
         renderDialogueBox(sentences, dialogueIndex, currentChamber, npc);
 
-        renderMessage(`Trust Level: ${trust}`);
+        renderMessage(`Trust: ${trust}`);
 
         if (event.key === "l") {
           leaveDialogue(currentChamber);

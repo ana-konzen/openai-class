@@ -10,9 +10,9 @@ import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts";
 import OpenAI from "npm:openai@4.60.0";
 
 // local utilities
-import * as log from "../shared/logger.ts";
-import { getEnvVariable, roundToDecimalPlaces } from "../shared/util.ts";
-import { calculateCost } from "../shared/costs.ts";
+import * as log from "../../shared/logger.ts";
+import { getEnvVariable, roundToDecimalPlaces } from "../../shared/util.ts";
+import { calculateCost } from "../../shared/costs.ts";
 
 let openai: OpenAI;
 let totalCost = 0;

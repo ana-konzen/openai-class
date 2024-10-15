@@ -4,7 +4,9 @@ export function randomInt(min, max) {
 
 export function splitSentences(str) {
   let str2 = str.trim();
-  return str2.match(/[^\.!\?]+[\.!\?]+[\n\r]*/g);
+  const sentences = str2.match(/[^\.!\?]+[\.!\?]+[\s\n\r]*/g);
+  const cleanedSentences = sentences.map((sentence) => sentence.trim().replace(/[\n\r]+/g, ""));
+  return cleanedSentences;
 }
 
 export function getOverlaps(currentChamber, playerX, playerY) {

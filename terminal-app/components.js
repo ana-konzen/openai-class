@@ -1,5 +1,6 @@
 import boxen from "npm:boxen@7.1.1"; //library for terminal boxes
 import { cursorTo, eraseLine, eraseDown, eraseEndLine } from "./ansi.js";
+import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts";
 import { Cell, Row, Table } from "https://deno.land/x/cliffy@v1.0.0-rc.4/table/mod.ts";
 
 export function renderNarrativeBox(sentences, dialogueIndex, type = "default") {
@@ -101,7 +102,7 @@ export function renderMenu(options, currentChamber, x = 1, y = 22) {
   eraseDown();
   eraseEndLine();
   eraseLine();
-  console.log(`${currentChamber.number}: ${currentChamber.title}`);
+  console.log(colors.bold(`${currentChamber.number}: ${currentChamber.title}`));
   cursorTo(x, y + 2);
   eraseLine();
   eraseEndLine();
