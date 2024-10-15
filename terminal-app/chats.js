@@ -4,7 +4,7 @@
 
 import { gpt, gptDialogue } from "./openai.js"; //GPT util library by Justin Bakse
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts"; //for text colors, from Cliffy
-import { writeMessage } from "./components.js";
+import { renderMessage } from "./components.js";
 
 export async function createGame(numChambers) {
   const result = await gpt({
@@ -84,16 +84,20 @@ export async function createGame(numChambers) {
                         description:
                           "From 1 to 10, the level of trust the character has with the player. Take difficulty into consideration.",
                       },
-                      keyInteraction: {
+                      keyKnowledge: {
                         type: "string",
-                        description: `What the player needs from the character to unlock the next chamber. 
+                        description: `The information or instructions the character will unveil to the player and that other characters might need.`,
+                      },
+                      keyNeed: {
+                        type: "string",
+                        description: `What the character needs from the player to give them the key.
                           For example, questions about the player's past experiences or values. 
                           Remember the chamber is empty and assume the player has no extra knowledge. 
-                          The player cannot ask other characters for help, they can only remember what other characters told them.
-                          Consider the difficulty level. If it's 1, the player has no specific knowledge and has not talked to any characters.`,
+                          Consider the difficulty level. 
+                          If it's 1, the player has no specific knowledge and has not talked to any characters. The character at level 1 should be easy to gain trust with.`,
                       },
                     },
-                    required: ["name", "role", "alignment", "initialTrustLevel", "keyInteraction"],
+                    required: ["name", "role", "alignment", "initialTrustLevel", "keyKnowledge", "keyNeed"],
                     additionalProperties: false,
                   },
                 },
@@ -110,9 +114,9 @@ export async function createGame(numChambers) {
     },
   });
 
-  await Deno.writeTextFile("game_info.json", JSON.stringify(result.parsed, null, 2));
+  await Deno.writeTextFile("game_info.json", result.content);
 
-  return result.parsed;
+  return JSON.parse(result.content);
 }
 
 export async function createPrologue(gameInfo, numChambers) {
@@ -143,7 +147,7 @@ export async function createPrologue(gameInfo, numChambers) {
     max_tokens: 500,
   });
 
-  return response.content;
+  return response.content.trim();
 }
 
 export async function createEpilogue(gameInfo, chatHistory, numChambers) {
@@ -170,7 +174,7 @@ export async function createEpilogue(gameInfo, chatHistory, numChambers) {
     max_tokens: 500,
   });
 
-  return response.content;
+  return response.content.trim();
 }
 
 export async function createMessage(chamber, gameInfo, chatHistory, numChambers) {
@@ -182,19 +186,36 @@ export async function createMessage(chamber, gameInfo, chatHistory, numChambers)
           Setting: ${gameInfo.setting}.
           The overall mystery of the game: ${gameInfo.mystery}.
           Final prize of the game: ${gameInfo.finalPrize}.
-          The game has ${numChambers} chambers. You are in chamber number ${chamber.difficulty}, which is the ${chamber.name}. So you are the ${chamber.difficulty} the player encountered.
+          The game has ${numChambers} chambers. You are in chamber number ${chamber.difficulty}, which is the ${chamber.name} out of ${numChambers}. So you are the ${chamber.difficulty} the player encountered.
           The lower the chamber number is, the easier the interaction is (for example, the riddles should be easier) and the easier it is to gain the character's trust.
+          The higher the number, the harder it is to gain the character's trust.
           You own the key to unlock the next chamber.
-          Your name is ${character.name} and this is your role in the game: ${character.role}. Your alignment is ${character.alignment} 
-          and your starting trust level with the player is ${character.trustLevel} out of 10. Your key interaction with the player is ${character.keyInteraction}.
+          Your name is ${character.name} and this is your role in the game: ${character.role}. 
+          Your starting trust level with the player is ${character.trustLevel} out of 10. 
+          Here's what you need from the player: ${character.keyNeed}.
           You will engage in a conversation with the player. Use the tools at your disposal to react to what the player has told you.
           The player needs to answer you in specific ways in order to unlock the next chamber. 
+          Your alignment is ${character.alignment}. 
+          Your alignment will affect your personality and how you interact with the player.
           Here is the chat history of the game: ${chatHistory}. 
-          You can take into consideration what has been said in previous chambers, and can also 
-          ask for information given to the player by other characters.
+          You can take into consideration what has been said in previous chambers, and can also ask for information given to the player by other characters.
           The player only knows what you and other characters from the chat history have told them. The player has no extra knowledge.
-          The chamber is empty. The player can only interact with you. The player cannot leave the chamber until you give them the key. Each interaction should be meaningful.
-          Once your trust level is 10, you can give the player the key so they can proceed to the next chamber.
+          The chamber is empty. The player can only interact with you. The player cannot leave the chamber until you give them the key but they can go back and talk to other characters. 
+          Each interaction should be meaningful. 
+          Consider if the player has been honest and if they have been paying attention to the information you have given them.
+          Also consider if the player is trying to trick you, really answering your questions, or making things up.
+          If the player is lying, you should be able to tell.
+          Example 1: 
+          You: Tell me about the tales you've heard in the village. 
+          Player: I've heard about the dragon that lives in the mountains.
+          You: This is not what I asked. I need to know about the tales you've heard in the village.
+          Example 2:
+          You: Tell me about the tales you've heard in the village.
+          Player: The village is very interesting.
+          You: This is not what I asked. I need to know about the tales you've heard in the village.
+          These were examples of the player trying to trick you.
+          Once your trust level is 10, you can give the player the key so they can proceed to the next chamber. 
+          You must also reveal the following information: ${character.keyKnowledge}. 
           The very first response should be neutral. You should tell the player what you need from them.
           Your answers should be between 20 and 100 words.`,
     },
@@ -209,38 +230,38 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
   if (character.trustLevel === undefined) character.trustLevel = character.initialTrustLevel;
   trust = character.trustLevel;
 
-  function beNeutral() {
+  function keepSameTrust() {
     let summary = `The character's trust didn't change. The current level of trust is ${trust}`;
-    writeMessage(colors.yellow(summary), 4);
+    renderMessage(colors.yellow("The character's trust didn't change."));
     return summary;
   }
 
-  function bePositive() {
+  function increaseTrust() {
     trust++;
     let summary = `The character's trust went up! The current level of trust is ${trust}`;
-    writeMessage(colors.green(summary), 4);
+    renderMessage(colors.green("The character's trust went up!"));
     return summary;
   }
 
-  function beNegative() {
+  function decreaseTrust() {
     trust--;
     let summary = `The character's trust went down! The current level of trust is ${trust}`;
-    writeMessage(colors.red(summary), 4);
+    renderMessage(colors.red("The character's trust went down!"));
     return summary;
   }
 
   const availableFunctions = {
-    beNeutral,
-    bePositive,
-    beNegative,
+    keepSameTrust,
+    increaseTrust,
+    decreaseTrust,
   };
 
   const tools = [
     {
       type: "function",
       function: {
-        name: "beNeutral",
-        description: "Use this to have a neutral reaction.",
+        name: "keepSameTrust",
+        description: "You trust the player the same amount.",
         parameters: {
           type: "object",
           properties: {},
@@ -253,8 +274,8 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
     {
       type: "function",
       function: {
-        name: "bePositive",
-        description: "Use this to have a positive reaction.",
+        name: "increaseTrust",
+        description: "Use this if you trust the player more.",
         parameters: {
           type: "object",
           properties: {},
@@ -267,8 +288,8 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
     {
       type: "function",
       function: {
-        name: "beNegative",
-        description: "Use this to have a negative reaction.",
+        name: "decreaseTrust",
+        description: "Use this if you trust the player less.",
         parameters: {
           type: "object",
           properties: {},
@@ -286,6 +307,7 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
     messages: messages,
     tools: tools,
     tool_choice: "required",
+    parallel_tool_calls: false,
     max_tokens: 500,
   });
 
@@ -302,6 +324,7 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
       role: "assistant",
       content: response.content,
       tool_choice: "required",
+      parallel_tool_calls: false,
       tools: tools,
     });
     messageHis.push(`${character.name}: ${response.content}`);
@@ -329,5 +352,5 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
   });
 
   character.trustLevel = trust;
-  return response.content;
+  return response.content.trim();
 }

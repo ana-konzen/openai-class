@@ -9,24 +9,28 @@ export class Character {
     this.y = y;
     this.chamber;
     this.talking = false;
-    this.moving = false;
+    this.inNavigation = false;
     this.inDialogue = false;
     this.inPrologue = true;
     this.inEpilogue = false;
   }
   goToEpilogue() {
     this.talking = false;
-    this.moving = false;
+    this.inNavigation = false;
     this.inDialogue = false;
     this.inPrologue = false;
     this.inEpilogue = true;
   }
   startMoving() {
     this.talking = false;
-    this.moving = true;
+    this.inNavigation = true;
     this.inDialogue = false;
     this.inPrologue = false;
     this.inEpilogue = false;
+  }
+  goToDialogue() {
+    this.inNavigation = false;
+    this.inDialogue = true;
   }
   render() {
     moveTo(this.x, this.y);
@@ -37,6 +41,9 @@ export class Character {
   }
   isCloseToExit() {
     return this.y === this.chamber.exitY - 1 && this.x >= this.chamber.exitX - 3;
+  }
+  isCloseToEntrance() {
+    return this.y === this.chamber.entranceY - 1 && this.x <= this.chamber.entranceX + 1;
   }
   isCloseToNPC() {
     return (

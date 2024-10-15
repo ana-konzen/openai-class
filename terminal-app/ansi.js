@@ -5,7 +5,7 @@ const myTty = tty({
   reader: Deno.stdin,
 });
 
-export function placeAt(x, y) {
+export function cursorTo(x, y) {
   myTty.cursorTo(x, y);
 }
 
@@ -14,21 +14,29 @@ export function moveTo(x, y) {
 }
 
 export function showCursor() {
-  myTty.cursorShow;
+  myTty.cursorShow();
 }
 
 export function hideCursor() {
-  myTty.cursorHide;
+  myTty.cursorHide();
 }
 
 export function eraseScreen() {
-  myTty.eraseScreen;
+  myTty.eraseScreen();
 }
 
 export function clearScreen() {
-  myTty.clearScreen;
+  myTty.clearScreen();
 }
 
 export function eraseLine() {
-  myTty.eraseLine;
+  myTty.eraseLine();
+}
+
+export function eraseEndLine() {
+  myTty.eraseLineEnd();
+}
+
+export function eraseDown() {
+  myTty.eraseDown;
 }

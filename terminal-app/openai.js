@@ -4,7 +4,7 @@ import Kia from "https://deno.land/x/kia@0.4.1/mod.ts";
 
 import { getEnvVariable } from "../shared/util.ts";
 
-import { placeAt, eraseLine } from "./ansi.js";
+import { cursorTo, eraseLine, hideCursor, eraseDown, eraseEndLine } from "./ansi.js";
 
 export function initOpenAI() {
   const apiKey = getEnvVariable("OPENAI_API_KEY");
@@ -33,7 +33,9 @@ export async function gpt(chatParams) {
 }
 
 export async function gptDialogue(chatParams) {
-  placeAt(2, 22);
+  cursorTo(1, 24);
+  hideCursor();
+  eraseEndLine();
   eraseLine();
   const spinner = new Kia("The character is thinking...");
   spinner.start();
@@ -44,7 +46,7 @@ export async function gptDialogue(chatParams) {
     const response = await openai.chat.completions.create(chatParams);
 
     spinner.stop();
-    placeAt(0, 0);
+    cursorTo(0, 0);
 
     return response.choices[0].message;
   } catch (error) {

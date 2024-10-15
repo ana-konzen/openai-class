@@ -1,61 +1,66 @@
 {
-  "setting": "In the secluded, dense woods of Eldoria, lies an ancient labyrinth rumored to have been built by a long-lost civilization. The labyrinth consists of cryptic paths leading to hidden chambers, each containing a guardian character shrouded in mystery. Legends speak of a grand treasure enclosed within the depths of the labyrinth, sparking curious adventurers to unravel its secrets.",
-  "mystery": "The labyrinth was constructed to protect the essence of Eldoria, a mystical gem said to bind the energy of life itself. However, over centuries, the knowledge of its exact location and the gem's power have been lost to time. The player must piece together the fragmented history and significance of the gem by talking to the characters and understanding their cryptic clues, revealing the path to preserve Eldoria’s essence and prevent the kingdom from fading into oblivion.",
-  "finalPrize": "The Essence of Eternium, a radiant gem that holds the life force of the kingdom, pulsating with vibrant energy.",
+  "setting": "The game is set in the forgotten ruins of an ancient civilization, buried deep beneath a dense and mystical forest. Each chamber of the dungeon reflects the lost glory and arcane secrets of its inhabitants, with intricate carvings and faded frescos hinting at grand tales of magic, betrayal, and hidden treasures. The air is filled with an old, heavy silence, occasionally broken by the distant echo of dripping water or the scurrying of unseen creatures. As players delve deeper, the sense of mystery thickens, wrapping around them like a second skin.",
+  "mystery": "Legend speaks of an ancient council that hid a powerful artifact capable of altering reality itself. The council was betrayed by one of its own, leading to their downfall and the artifact being sealed away in a secret chamber. The player's task is to unravel who committed the betrayal and to understand their motives, thereby restoring the artifact to its rightful safety.",
+  "finalPrize": "The final prize is the \"Eye of Eternity,\" a brilliant gemstone severed from time itself. It's said to grant the holder the vision to alter their destiny and even glimpse into other realities.",
   "chambers": [
     {
-      "name": "Chamber of Forgotten Vows",
+      "name": "Chamber of Beginnings",
       "difficulty": 1,
       "character": {
-        "name": "Eldric",
-        "role": "A former guard of the labyrinth, now a confused warden.",
-        "alignment": "Neutral",
-        "initialTrustLevel": 7,
-        "keyInteraction": "Eldric, holding remnants of his duty-bound past, asks about the trade routes connecting the kingdom. Correctly recalling his directions from his patrols gives you the key."
+        "name": "Eldon the Scribe",
+        "role": "Historian of the ancient council, tasked with recording their history.",
+        "alignment": "Neutral Good",
+        "initialTrustLevel": 8,
+        "keyKnowledge": "Eldon shares a general overview of the ancient council, its purpose, and that they possessed a powerful artifact that had to be hidden due to a great betrayal from within.",
+        "keyNeed": "Eldon wants to hear the values the player holds most dear, to gauge their integrity and sincerity."
       }
     },
     {
-      "name": "Chamber of Echoing Whispers",
+      "name": "Chamber of Whispers",
       "difficulty": 2,
       "character": {
-        "name": "Mirra",
-        "role": "A historian obsessed with the labyrinth's history.",
-        "alignment": "Neutral",
+        "name": "Lyra the Messenger",
+        "role": "Served as the communication link between the council members.",
+        "alignment": "Chaotic Neutral",
         "initialTrustLevel": 6,
-        "keyInteraction": "Mirra requires the player to recount the tale told by Eldric about the legendary merchant who once traded secrets, verifying if the story aligns with her historical parchments."
+        "keyKnowledge": "Lyra reveals that during her tenure, she often heard hushed conversations hinting at unrest and dissent amongst the council, suggesting the betrayal was premeditated.",
+        "keyNeed": "Lyra tests the player's insight by asking them to recount any messages or clues they found significant from Eldon, to see if the player is perceptive."
       }
     },
     {
-      "name": "Chamber of Shimmering Truths",
+      "name": "Chamber of Shade",
       "difficulty": 3,
       "character": {
-        "name": "Sylvan",
-        "role": "A wayward sage with knowledge of spells woven into the maze.",
-        "alignment": "Neutral",
+        "name": "Vaelen the Shadow",
+        "role": "The council's spy, tasked with gathering intelligence on threats.",
+        "alignment": "Lawful Evil",
         "initialTrustLevel": 5,
-        "keyInteraction": "Sylvan needs to hear a parable about choices and destinies, tying it to a riddle Eldric hinted at, which only a keen listener would decipher."
+        "keyKnowledge": "Vaelen admits he suspected one member of acting suspiciously just before the council's downfall and possesses hidden records of secret meetings.",
+        "keyNeed": "Vaelen demands the player express their understanding of human deceit and loyalty, including recollections from previous characters and any other insights they might have gleaned."
       }
     },
     {
-      "name": "Chamber of Guiding Stars",
+      "name": "Chamber of Insight",
       "difficulty": 4,
       "character": {
-        "name": "Thalia",
-        "role": "Keeper of ancient star maps related to the labyrinth's creation.",
-        "alignment": "Good",
+        "name": "Seraphine the Seer",
+        "role": "The council's oracle, respected for her visions of possible futures.",
+        "alignment": "True Neutral",
         "initialTrustLevel": 4,
-        "keyInteraction": "She challenges the player to describe the star constellations crucial to navigating the labyrinth's creation cycle, a task only ventured upon by recalling Mirra's subtle clues."
+        "keyKnowledge": "Seraphine unveils that her last vision before the council's end showed a figure obscured in shadow, holding the artifact with ill intentions, but her vision was blurred by motives of fear and ambition.",
+        "keyNeed": "Seraphine wishes to test the player's foresight and understanding of future consequences by having them interpret a vision or scenario based on past revelations."
       }
     },
     {
-      "name": "Chamber of the Eternal Cipher",
+      "name": "Chamber of Twilight",
       "difficulty": 5,
       "character": {
-        "name": "Orin",
-        "role": "The enigmatic gatekeeper of the final chamber.",
-        "alignment": "Good",
+        "name": "Malidon the Guardian",
+        "role": "Protector of the artifact's resting place, exposed to its immense power.",
+        "alignment": "Neutral Evil",
         "initialTrustLevel": 3,
-        "keyInteraction": "Orin demands an account of the labyrinth's binding spells and their origins, deciphering a code from words shared by Sylvan and confirming with constellations learned from Thalia, granting access to the ultimate treasure."
+        "keyKnowledge": "Malidon confirms the identity of the betrayed council member, expressing his own conflicting feelings about his duty and the corrupted trust.",
+        "keyNeed": "Malidon challenges the player's resolve and moral grounding, seeking a detailed analysis of what the player best understands as true power, compiling all knowledge from prior chambers into a coherent judgment."
       }
     }
   ]
