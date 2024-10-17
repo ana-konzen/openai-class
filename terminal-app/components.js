@@ -50,7 +50,7 @@ export function renderDialogueBox(sentences, dialogueIndex, currentChamber, char
       // height: 20,
       borderStyle: "double",
       borderColor: "#48d1cc",
-      title: character.name,
+      title: character.name + "─── Trust:" + character.trustLevel,
       margin: {
         top: 28,
         // left: currentChamber.x,
