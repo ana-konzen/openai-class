@@ -64,15 +64,15 @@ let doorColor = brown;
 
 // const jsonStr = await Deno.readTextFile("game_info.json");
 // const gameInfo = JSON.parse(jsonStr);
+// const prologue = `${gameInfo.setting}  ${gameInfo.mystery}  ${gameInfo.finalPrize}`;
 
 const gameInfo = await createGame(numChambers);
 
-const chambersInfo = gameInfo.chambers;
-const chambers = createChambers(numChambers, chambersInfo);
-
-// const prologue = `${gameInfo.setting}  ${gameInfo.mystery}  ${gameInfo.finalPrize}`;
 const prologue = await createPrologue(gameInfo, numChambers);
 const prologueSentences = splitSentences(prologue);
+
+const chambersInfo = gameInfo.chambers;
+const chambers = createChambers(numChambers, chambersInfo);
 
 chatHistory.push({
   prologue: prologue,
