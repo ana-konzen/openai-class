@@ -97,9 +97,9 @@ for await (const event of keypress()) {
     renderNarrativeBox(prologueSentences, dialogueIndex, "prologue");
 
     //start the main game after space if pressed
-    // if (dialogueIndex === prologueSentences.length - 1) {
-    if (event.key === "space") startGame(currentChamber);
-    // }
+    if (dialogueIndex === prologueSentences.length - 1) {
+      if (event.key === "space") startGame(currentChamber);
+    }
   } else if (player.state === "navigation" || player.state === "dialogue" || player.state === "talking") {
     //game started
     clearScreen();
