@@ -43,13 +43,13 @@ export async function gptMain(type, chatParams) {
     const response = await openai.chat.completions.create(chatParams);
     clearInterval(spinner);
 
-    cursorTo(0, 26);
+    cursorTo(0, 30);
 
     eraseDown();
     // spinner.stop();
     if (type === "prologue") {
       console.log(
-        boxen(colors.green("Press any key to start the game."), {
+        boxen(colors.bold("Press any key to start the game."), {
           float: "center",
           borderStyle: "none",
         })
@@ -63,7 +63,7 @@ export async function gptMain(type, chatParams) {
   }
 }
 
-function renderSpinner(message, type, name = "", x = 0, y = 26) {
+function renderSpinner(message, type, name = "", x = 0, y = 30) {
   const spinner = [".  ", ".. ", "...", "   "];
   let i = 0;
   return setInterval(() => {

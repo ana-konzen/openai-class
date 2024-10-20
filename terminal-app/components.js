@@ -6,9 +6,9 @@ import figlet from "npm:figlet@1.6.0";
 
 /* globals Deno */
 export function renderNarrativeBox(sentences, dialogueIndex, type = "default") {
-  cursorTo(0, 4);
+  cursorTo(0, 10);
   console.log(
-    boxen(`${sentences[dialogueIndex]}\n\n${dialogueIndex + 1}/${sentences.length}`, {
+    boxen(`${sentences[dialogueIndex]}\n\n` + colors.gray(`${dialogueIndex + 1}/${sentences.length}`), {
       width: 50,
       padding: 1,
       borderStyle: "double",
@@ -42,44 +42,20 @@ export function renderDialogueBox(sentences, dialogueIndex, currentChamber, char
   const boxWidth = 40;
   const dashes = "─".repeat(boxWidth - character.name.length - 15);
   cursorTo(0, 0);
-  // if (dialogueIndex < sentences.length - 1) {
+
   console.log(
-    boxen(`${sentences[dialogueIndex]}\n\n${dialogueIndex + 1}/${sentences.length}`, {
+    boxen(`${sentences[dialogueIndex]}\n\n` + colors.gray(`${dialogueIndex + 1}/${sentences.length}`), {
       padding: 1,
       width: boxWidth,
-      // height: 20,
       borderStyle: "singleDouble",
       borderColor: "#48d1cc",
       title: `${character.name} ${dashes} Trust: ${character.trustLevel}`,
       margin: {
         top: 23,
-        // left: currentChamber.x,
         left: 1,
       },
     })
   );
-  // } else {
-  //   console.log(
-  //     boxen(
-  //       `${sentences[dialogueIndex]}\n\n${dialogueIndex + 1}/${
-  //         sentences.length
-  //       }\n\n[t] talk ${paddedText} [space] leave`,
-  //       {
-  //         padding: 1,
-  //         width: boxWidth,
-  //         // height: 20,
-  //         borderStyle: "double",
-  //         borderColor: "cyan",
-  //         title: character.name,
-  //         margin: {
-  //           top: 21,
-  //           left: currentChamber.x,
-  //         },
-  //         borderStyle: "singleDouble",
-  //       }
-  //     )
-  //   );
-  // }
 
   cursorTo(0, 0);
 }
@@ -104,9 +80,6 @@ export function renderMenu(options, currentChamber, inDialogue = false, sentence
   eraseLine();
   console.log(colors.bold(`${currentChamber.number}: ${currentChamber.title}`));
   if (inDialogue) {
-    cursorTo(0, 0);
-    console.log(sentence);
-    console.log(calculateBoxHeight(sentence));
     cursorTo(x, calculateBoxHeight(sentence));
   } else {
     cursorTo(x, y + 2);
@@ -123,21 +96,25 @@ export function renderLandingPage() {
 
   const { columns } = Deno.consoleSize();
 
-  figlet.text("Dungeon Mystery", { font: "poison", width: 80, whitespaceBreak: true }, function (err, data) {
-    if (err) {
-      console.log("Something went wrong...");
-      console.dir(err);
-      return;
+  figlet.text(
+    "Dungeon Mystery",
+    { font: "Delta Corps Priest 1", width: 100, whitespaceBreak: true },
+    function (err, data) {
+      if (err) {
+        console.log("Something went wrong...");
+        console.dir(err);
+        return;
+      }
+
+      const lines = data.split("\n");
+      cursorTo(0, 10);
+
+      lines.forEach((line) => {
+        const padding = Math.max(0, Math.floor((columns - line.length) / 2));
+        console.log(" ".repeat(padding) + colors.rgb24(line, 0x345717));
+      });
     }
-
-    const lines = data.split("\n");
-    cursorTo(0, 0);
-
-    lines.forEach((line) => {
-      const padding = Math.max(0, Math.floor((columns - line.length) / 2));
-      console.log(" ".repeat(padding) + line);
-    });
-  });
+  );
 }
 
 export function renderGameOverPage() {
@@ -145,7 +122,7 @@ export function renderGameOverPage() {
 
   const { columns } = Deno.consoleSize();
 
-  figlet.text("Game Over", { font: "poison", width: 80, whitespaceBreak: true }, function (err, data) {
+  figlet.text("Game Over", { font: "Bloody", width: 90 }, function (err, data) {
     if (err) {
       console.log("Something went wrong...");
       console.dir(err);
@@ -153,16 +130,19 @@ export function renderGameOverPage() {
     }
 
     const lines = data.split("\n");
+    cursorTo(0, 10);
 
     lines.forEach((line) => {
       const padding = Math.max(0, Math.floor((columns - line.length) / 2));
-      console.log(" ".repeat(padding) + line);
+      console.log(" ".repeat(padding) + colors.red(line));
     });
   });
-  cursorTo(0, 26);
+
+  cursorTo(0, 20);
   console.log(
-    boxen(colors.red("You were kicked out of the dungeon.\nPress 'control + c' to exit the game"), {
+    boxen("You were kicked out of the dungeon.\n\nPress 'control + c' to exit the game.", {
       float: "center",
+      textAlignment: "center",
       borderStyle: "none",
     })
   );

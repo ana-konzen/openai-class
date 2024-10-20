@@ -250,22 +250,24 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
   const firstName = character.name.split(" ")[0];
 
   function keepSameTrust() {
-    let summary = `${firstName}'s trust didn't change. The current level of trust is ${trust}. The player still doesn't have the key.`;
-    // responses.push(summary);
-    dialogue.trust = colors.yellow(`${firstName}'s trust didn't change.`);
-    // renderMessage(colors.yellow("The character's trust didn't change."));
+    let summary = `${firstName} just met the player. The current level of trust is ${trust}.`;
+    dialogue.trust = "";
+    if (messages.length > 3) {
+      dialogue.trust = colors.yellow(`${firstName}'s trust didn't change.`);
+      summary = `${firstName}'s trust didn't change. The current level of trust is ${trust}. The player still doesn't have the key.`;
+    }
     return summary;
   }
 
   function increaseTrust() {
     trust++;
     let summary = `${firstName}'s trust went up! The current level of trust is ${trust}. The player still doesn't have the key.`;
-    dialogue.trust = colors.green(`${firstName}'s trust went up!`);
+    dialogue.trust = colors.green(`${firstName}'s trust went up from ${trust - 1} to ${trust}!`);
     if (trust === 10) {
       summary = `${firstName}'s trust went up! The current level of trust is ${trust}. You can now give the player the key to unlock the next chamber!`;
-      dialogue.trust = colors.green(
-        `${firstName}'s trust went up! You received the key to the next chamber!`
-      );
+      dialogue.trust =
+        colors.green(`${firstName}'s trust went up!`) +
+        colors.green("You received the key to the next chamber!");
     }
     return summary;
   }
@@ -273,12 +275,12 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
   function decreaseTrust() {
     trust--;
     let summary = `${firstName}'s trust went down! The current level of trust is ${trust}`;
-    dialogue.trust = colors.red(`${firstName}'s trust went down!`);
+    dialogue.trust = colors.red(`${firstName}'s trust went down from ${trust + 1} to ${trust}!`);
     if (trust <= 1) {
       summary = `${firstName}'s trust went down! The current level of trust is ${trust}. If the trust level goes below 0, the player will be kicked out of the dungeon!`;
-      dialogue.trust = colors.red(
-        `${firstName}'s trust went down! Be careful, if the trust level goes below 0, you will be kicked out of the dungeon!`
-      );
+      dialogue.trust =
+        colors.red(`${firstName}'s trust went down!`) +
+        colors.red("Be careful, if the trust level goes below 0, you will be kicked out of the dungeon!");
     }
     return summary;
   }

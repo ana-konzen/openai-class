@@ -62,17 +62,18 @@ const cyan = 0x48d1cc;
 // const red = 0xff0000;
 // const green = 0x00ff00;
 const brown = 0xed9755;
+let doorColor = brown;
 
-const jsonStr = await Deno.readTextFile("game_info.json");
+// const jsonStr = await Deno.readTextFile("game_info.json");
+// const gameInfo = JSON.parse(jsonStr);
 
-// const gameInfo = await createGame(numChambers);
-const gameInfo = JSON.parse(jsonStr);
+const gameInfo = await createGame(numChambers);
 
 const chambersInfo = gameInfo.chambers;
 const chambers = createChambers(numChambers, chambersInfo);
 
-const prologue = await createPrologue(gameInfo, numChambers);
 // const prologue = `${gameInfo.setting}  ${gameInfo.mystery}  ${gameInfo.finalPrize}`;
+const prologue = await createPrologue(gameInfo, numChambers);
 const prologueSentences = splitSentences(prologue);
 
 chatHistory.push({
@@ -107,8 +108,6 @@ for await (const event of keypress()) {
     cursorTo(0, 0);
     currentChamber = chambers[room]; //level defaults to 0
     player.placeInChamber(currentChamber);
-    currentChamber.doorColor = brown;
-
     playerOverlaps = getOverlaps(currentChamber, player.x, player.y);
 
     const npc = chambersInfo[room].character;
@@ -261,7 +260,7 @@ function renderChambers() {
   for (let i = level; i >= 0; i--) {
     if (i === room) {
       chambers[i].color = chamberColor;
-      chambers[i].doorColor = brown;
+      chambers[i].doorColor = doorColor;
       chambers[i].npcColor = cyan;
     } else {
       chambers[i].color = "gray";
@@ -312,7 +311,7 @@ function unlockDoor(chamber) {
 async function startDialogue(chamber) {
   hideCursor();
   chamberColor = "gray";
-  chamber.doorColor = gray;
+  doorColor = gray;
   player.color = gray;
   renderChambers();
   player.render();
@@ -334,7 +333,7 @@ function startGame(currentChamber) {
 function leaveDialogue(chamber) {
   player.state = "navigation";
   chamberColor = "white";
-  chamber.doorColor = brown;
+  doorColor = brown;
   player.color = white;
   chamber.messages.push({
     role: "user",
