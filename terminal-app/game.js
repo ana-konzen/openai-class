@@ -59,8 +59,6 @@ let chamberColor = "white";
 const gray = 0x808080;
 const white = 0xffffff;
 const cyan = 0x48d1cc;
-// const red = 0xff0000;
-// const green = 0x00ff00;
 const brown = 0xed9755;
 let doorColor = brown;
 
