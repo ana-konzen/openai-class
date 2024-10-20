@@ -3,10 +3,11 @@ import { randomInt } from "./util.js";
 import { cursorTo } from "./ansi.js";
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts";
 
-const { columns, rows } = Deno.consoleSize();
+// const { columns, rows } = Deno.consoleSize();
 
 export class Chamber {
-  constructor(number, title, w, h, x = 0, y = 0) {
+  constructor(number, title, w, h, npc, x = 0, y = 0) {
+    this.number = number;
     this.x = x;
     this.y = y;
     this.w = w;
@@ -22,17 +23,48 @@ export class Chamber {
     this.entranceY = 0;
     this.entranceX = this.x + 1;
     this.color = "white";
-    this.entranceColor = 0xffffff;
-    this.exitColor = 0xffffff;
+    this.doorColor = 0xed9755;
     this.npcColor = 0x48d1cc;
 
-    this.number = number;
+    this.exitSymbol = "∏";
+    this.entranceSymbol = "├";
+
+    this.closedDoor = "∏";
+    this.openDoor = "‾";
+    this.unlockedDoor = "▒";
     this.title = title;
+    this.steps = 0;
+
+    this.npcSymbol = npc;
 
     this.locked = true;
     this.messages = [];
   }
+  openExit() {
+    //door open and closes after timeout
+    this.exitSymbol = this.openDoor;
+    this.steps = 0;
+  }
+  openEntrance() {
+    //door open and closes after timeout
+    this.entranceSymbol = this.openDoor;
+    this.steps = 0;
+  }
   render() {
+    // if (!this.locked) this.exitSymbol = "░";
+
+    if (this.exitSymbol === this.openDoor) {
+      this.steps++;
+      if (this.steps > 5) {
+        this.exitSymbol = this.closedDoor;
+      }
+    }
+    if (this.entranceSymbol === this.openDoor) {
+      this.steps++;
+      if (this.steps > 5) {
+        this.entranceSymbol = this.closedDoor;
+      }
+    }
     cursorTo(0, 0);
     console.log(
       boxen("", {
@@ -45,12 +77,12 @@ export class Chamber {
       })
     );
     cursorTo(this.npcX, this.npcY);
-    console.log(colors.rgb24("&", this.npcColor));
+    console.log(colors.bold.rgb24(this.npcSymbol, this.npcColor));
     cursorTo(this.exitX, this.exitY);
-    console.log(colors.rgb24("%", this.exitColor));
+    console.log(colors.bold.rgb24(this.exitSymbol, this.doorColor));
     if (this.hasEntrance) {
       cursorTo(this.entranceX, this.entranceY);
-      console.log(colors.rgb24("%", this.entranceColor));
+      console.log(colors.bold.rgb24(this.entranceSymbol, this.doorColor));
     }
 
     cursorTo(0, 0);
@@ -59,6 +91,7 @@ export class Chamber {
 
 export function createChambers(numChambers, chambersInfo) {
   const chambers = [];
+  const npcSymbols = ["δ", "Φ", "ζ", "ξ", "θ", "Ψ", "∂", "⥉", "§"];
   let offset = 0;
   for (let i = 0; i < numChambers; i++) {
     let w = randomInt(8, 15) * 2;
@@ -67,6 +100,7 @@ export function createChambers(numChambers, chambersInfo) {
       chambersInfo[i].name,
       w,
       randomInt(10, 12),
+      npcSymbols[i % npcSymbols.length],
       i * 2 + offset,
       randomInt(5, 8)
     );

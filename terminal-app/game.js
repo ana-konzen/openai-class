@@ -3,6 +3,8 @@
  * A dungeon-crawler RPG game in your computer's terminal, using ChatGPT.
  */
 
+/* globals Deno */
+
 import { keypress } from "https://deno.land/x/cliffy@v1.0.0-rc.4/keypress/mod.ts";
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts";
 import { Input } from "https://deno.land/x/cliffy@v1.0.0-rc.4/prompt/mod.ts";
@@ -11,7 +13,7 @@ import { createGame, createMessage, createDialogue, createEpilogue, createProlog
 
 import { splitSentences, getOverlaps } from "./util.js";
 
-import { cursorTo, showCursor, hideCursor, eraseScreen, clearScreen, eraseDown } from "./ansi.js";
+import { cursorTo, showCursor, hideCursor, eraseScreen, clearScreen, eraseDown, eraseLine } from "./ansi.js";
 
 import {
   renderNarrativeBox,
@@ -20,6 +22,7 @@ import {
   renderMenu,
   renderLandingPage,
   renderGameOverPage,
+  calculateBoxHeight,
 } from "./components.js";
 
 import { Character } from "./character.js";
@@ -41,7 +44,6 @@ const navActions = ["[w][a][s][d] move"];
 const firstListenActions = ["[>] next"];
 const listenActions = ["[<] previous", "[>] next"];
 const listenActionsLast = ["[<] previous", colors.magenta("[r] reply"), "[l] leave"];
-const talkActions = ["[enter] confirm"];
 const navActionsNpc = ["[w][a][s][d] move", colors.magenta("[t] talk")];
 const navActionsDoor = ["[w][a][s][d] move", colors.magenta("[e] open door")];
 
@@ -57,9 +59,9 @@ let chamberColor = "white";
 const gray = 0x808080;
 const white = 0xffffff;
 const cyan = 0x48d1cc;
-const red = 0xff0000;
-const green = 0x00ff00;
-let exitColor = white;
+// const red = 0xff0000;
+// const green = 0x00ff00;
+const brown = 0xed9755;
 
 const jsonStr = await Deno.readTextFile("game_info.json");
 
@@ -80,12 +82,13 @@ chatHistory.push({
 let currentChamber = chambers[0];
 
 currentChamber.messages = await createMessage(chambersInfo[level], gameInfo, chatHistory, numChambers);
+player.state = "prologue";
 hideCursor();
 
 for await (const event of keypress()) {
   eraseScreen();
   hideCursor();
-  if (player.inPrologue) {
+  if (player.state === "prologue") {
     cursorTo(0, 4);
 
     //create narrative box
@@ -95,16 +98,16 @@ for await (const event of keypress()) {
     renderNarrativeBox(prologueSentences, dialogueIndex, "prologue");
 
     //start the main game after space if pressed
-    if (dialogueIndex === prologueSentences.length - 1) {
-      if (event.key === "space") startGame(currentChamber);
-    }
-  } else if (player.inNavigation || player.inDialogue) {
+    // if (dialogueIndex === prologueSentences.length - 1) {
+    if (event.key === "space") startGame(currentChamber);
+    // }
+  } else if (player.state === "navigation" || player.state === "dialogue" || player.state === "talking") {
     //game started
     clearScreen();
     cursorTo(0, 0);
     currentChamber = chambers[room]; //level defaults to 0
     player.placeInChamber(currentChamber);
-    currentChamber.exitColor = white;
+    currentChamber.doorColor = brown;
 
     playerOverlaps = getOverlaps(currentChamber, player.x, player.y);
 
@@ -114,16 +117,14 @@ for await (const event of keypress()) {
 
     if ((event.key === "c" && !event.ctrlKey) || trust >= 10) unlockDoor(currentChamber);
     if (trust < 0 || event.key === "g") {
-      player.inNavigation = false;
-      player.inDialogue = false;
-      clearScreen();
+      player.state = "gameover";
+      eraseScreen();
       renderGameOverPage();
-      // await endGame(false);
-      // break;
+      continue;
     }
 
     //if player is moving
-    if (player.inNavigation) {
+    if (player.state === "navigation") {
       renderMenu(navActions, currentChamber);
       player.color = white;
 
@@ -141,16 +142,27 @@ for await (const event of keypress()) {
 
       if (player.isCloseToExit()) {
         renderMenu(navActionsDoor, currentChamber);
-        if (!currentChamber.locked && room === level)
+        if (!currentChamber.locked && room === level) {
           renderMessage(colors.green("The door is now unlocked!"));
+        }
 
         if (event.key === "e") {
           if (currentChamber.locked) {
             renderMessage(colors.red("The door is locked"));
-            exitColor = red;
           } else {
             if (room === level) {
               await addLevel();
+              if (finalChamber) {
+                player.state = "epilogue";
+                eraseScreen();
+                hideCursor();
+                epilogue = await createEpilogue(gameInfo, chatHistory, numChambers);
+                let sentences = splitSentences(epilogue);
+                chatHistory.push({ epilogue: epilogue });
+                dialogueIndex = 0;
+                renderNarrativeBox(sentences, dialogueIndex, "epilogue");
+                continue;
+              }
             } else {
               await goToNextRoom();
             }
@@ -169,71 +181,54 @@ for await (const event of keypress()) {
           hideCursor();
           await startDialogue(currentChamber);
           hideCursor();
-          const sentences = splitSentences(dialogue);
+          let sentences = splitSentences(dialogue.trust + dialogue.content);
           hideCursor();
-          renderMenu(firstListenActions, currentChamber);
-          renderMessage(`Trust: ${trust}`);
+          renderMenu(firstListenActions, currentChamber, true, sentences[dialogueIndex]);
 
           renderDialogueBox(sentences, dialogueIndex, currentChamber, npc);
         }
       }
-    } else if (player.inDialogue) {
-      renderMessage(`Trust: ${trust}`);
-      if (trust === 10) {
-        colors.green("You got the key!");
-      }
-
+    } else if (player.state === "dialogue" || player.state === "talking") {
       cursorTo(0, 0);
 
-      let sentences = splitSentences(dialogue);
+      let sentences = splitSentences(dialogue.trust + dialogue.content);
       if (event.key === "right" && dialogueIndex < sentences.length - 1) dialogueIndex++;
       if (event.key === "left" && dialogueIndex > 0) dialogueIndex--;
       if (dialogueIndex === 0) {
-        renderMenu(firstListenActions, currentChamber);
+        renderMenu(firstListenActions, currentChamber, true, sentences[dialogueIndex]);
       } else {
-        renderMenu(listenActions, currentChamber);
-      }
-      renderMessage(`Trust: ${trust}`);
-      if (trust === 10) {
-        colors.green("You got the key!");
+        renderMenu(listenActions, currentChamber, true, sentences[dialogueIndex]);
       }
 
       renderDialogueBox(sentences, dialogueIndex, currentChamber, npc);
 
       if (dialogueIndex === sentences.length - 1) {
-        renderMenu(listenActionsLast, currentChamber);
-        renderMessage(`Trust: ${trust}`);
-        if (trust === 10) {
-          colors.green("You got the key!");
-        }
+        renderMenu(listenActionsLast, currentChamber, true, sentences[dialogueIndex]);
 
         if (event.key === "r") {
-          renderMenu(talkActions, currentChamber);
-          renderMessage(`Trust: ${trust}`);
-
           renderDialogueBox(sentences, dialogueIndex, currentChamber, npc);
 
           startTalking();
+          player.state = "talking";
           player.color = white;
+          cursorTo(1, calculateBoxHeight(sentences[sentences.length - 1]));
+          eraseLine();
           const playerResponse = await Input.prompt({ message: "Your response:", prefix: "" });
-          renderMenu(listenActions, currentChamber);
           await finishTalking(playerResponse, currentChamber);
           eraseDown();
           hideCursor();
         }
-        renderMenu(listenActionsLast, currentChamber);
-        if (dialogueIndex === 0) renderMenu(firstListenActions, currentChamber);
-        sentences = splitSentences(dialogue);
-        renderDialogueBox(sentences, dialogueIndex, currentChamber, npc);
-
-        renderMessage(`Trust: ${trust}`);
-        if (trust === 10) {
-          colors.green("You got the key!");
+        renderMenu(listenActionsLast, currentChamber, true, sentences[dialogueIndex]);
+        if (dialogueIndex === 0) {
+          renderMenu(firstListenActions, currentChamber, true, sentences[dialogueIndex]);
         }
+        sentences = splitSentences(dialogue.trust + dialogue.content);
+        renderDialogueBox(sentences, dialogueIndex, currentChamber, npc);
 
         if (event.key === "l") {
           leaveDialogue(currentChamber);
           clearScreen();
+          renderMenu(navActionsNpc, currentChamber);
         }
       }
 
@@ -242,7 +237,7 @@ for await (const event of keypress()) {
 
     renderChambers();
     player.render();
-  } else if (player.inEpilogue) {
+  } else if (player.state === "epilogue") {
     eraseScreen();
     hideCursor();
     const epilogueSentences = splitSentences(epilogue);
@@ -251,6 +246,9 @@ for await (const event of keypress()) {
     if (event.key === "left" && dialogueIndex > 0) dialogueIndex--;
 
     renderNarrativeBox(epilogueSentences, dialogueIndex, "epilogue");
+  } else if (player.state === "gameover") {
+    clearScreen();
+    renderGameOverPage();
   }
   if (event.ctrlKey && event.key === "c") {
     await endGame();
@@ -259,16 +257,15 @@ for await (const event of keypress()) {
 }
 
 function renderChambers() {
+  // if (finalChamber) return;
   for (let i = level; i >= 0; i--) {
     if (i === room) {
       chambers[i].color = chamberColor;
-      if (!chambers[i].locked) chambers[i].exitColor = green;
-      if (chambers[i].locked) chambers[i].exitColor = exitColor;
+      chambers[i].doorColor = brown;
       chambers[i].npcColor = cyan;
     } else {
       chambers[i].color = "gray";
-      chambers[i].exitColor = gray;
-      chambers[i].entranceColor = gray;
+      chambers[i].doorColor = gray;
       chambers[i].npcColor = gray;
     }
     chambers[i].render();
@@ -278,30 +275,25 @@ function renderChambers() {
 async function addLevel() {
   level++;
   if (level > numChambers - 1) {
-    level = numChambers - 1;
     finalChamber = true;
+    return;
   }
   chambers[level].messages = await createMessage(chambersInfo[level], gameInfo, chatHistory, numChambers);
-  if (finalChamber) {
-    player.inEpilogue = true;
-    eraseScreen();
-    hideCursor();
-    epilogue = await createEpilogue(gameInfo, chatHistory, numChambers);
-    chatHistory.push({ epilogue: epilogue });
-    dialogueIndex = 0;
-    player.goToEpilogue();
-  }
-  goToNextRoom(true);
+  goToNextRoom();
 }
 
 async function goToNextRoom() {
+  currentChamber.openExit();
   room++;
   if (room > numChambers - 1) room = numChambers - 1;
+  chambers[room].openEntrance();
 }
 
 async function goBack() {
+  currentChamber.openEntrance();
   room--;
   if (room < 0) room = 0;
+  chambers[room].openExit();
 }
 
 async function endGame(clear = true) {
@@ -314,25 +306,24 @@ async function endGame(clear = true) {
 
 function unlockDoor(chamber) {
   if (chamber.locked) renderMessage(colors.green("You received a key!"));
-  chamber.exitColor = green;
   chamber.locked = false;
 }
 
 async function startDialogue(chamber) {
   hideCursor();
-  player.inNavigation = false;
   chamberColor = "gray";
-  chamber.entranceColor = gray;
+  chamber.doorColor = gray;
   player.color = gray;
   renderChambers();
   player.render();
   dialogue = await createDialogue(chambersInfo[room], chamber.messages, trust, chatHistory, numChambers);
-  player.inDialogue = true;
+  player.state = "dialogue";
+
   dialogueIndex = 0;
 }
 
 function startGame(currentChamber) {
-  player.startMoving();
+  player.state = "navigation";
   player.x = chambers[0].x + 1;
   player.y = chambers[0].y + 1;
   chambers[0].render();
@@ -341,22 +332,19 @@ function startGame(currentChamber) {
 }
 
 function leaveDialogue(chamber) {
-  player.inDialogue = false;
+  player.state = "navigation";
   chamberColor = "white";
-  chamber.entranceColor = white;
+  chamber.doorColor = brown;
   player.color = white;
   chamber.messages.push({
     role: "user",
     content: "Hello, I'm back. We can now continue our conversation where we left off.",
   });
-  player.startMoving();
 }
 
 async function startTalking() {
   player.color = white;
-  player.talking = true;
-  player.inDialogue = true;
-  player.inNavigation = false;
+  player.state = "talking";
   renderChambers();
   player.render();
   dialogueIndex = 0;
@@ -366,7 +354,7 @@ async function startTalking() {
 
 async function finishTalking(playerResponse, chamber) {
   hideCursor();
-  player.talking = false;
+  player.state = "dialogue";
   player.color = gray;
   dialogueIndex = 0;
   chamber.messages.push({ role: "user", content: playerResponse });

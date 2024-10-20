@@ -8,6 +8,7 @@ export class Character {
     this.x = x;
     this.y = y;
     this.chamber;
+    this.state = "";
     this.talking = false;
     this.inNavigation = false;
     this.inDialogue = false;
