@@ -98,7 +98,8 @@ export async function createGame(numChambers) {
                           Consider the difficulty level. 
                           If it's 1, the player has no specific knowledge and has not talked to any characters. 
                           So difficulty level 1 should be more of an introduction or tutorial about how to play the game. 
-                          Remember to make the game fun and engaging, so each need should be diverse.`,
+                          Remember to make the game fun and engaging, so each need should be diverse.
+                          Be as specific as you can.`,
                       },
                     },
                     required: ["name", "role", "alignment", "initialTrustLevel", "keyKnowledge", "keyNeed"],

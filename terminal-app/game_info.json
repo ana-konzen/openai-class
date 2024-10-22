@@ -1,66 +1,66 @@
 {
-  "setting": "Set in the ancient and mystical land of Eldarheim, players are drawn into a world where the boundaries between magic and reality blur. Beneath the towering peaks and lush forests lies the Crystalline Dungeon, a place of legend said to hold the powers to alter fate itself. As a chosen Seeker, the player must navigate this enigmatic place, encountering remnants of a forgotten civilization and intriguing characters who each hold a piece of a deeply woven secret.",
-  "mystery": "The player's journey begins with whispers of a betrayal that led to the downfall of Eldarheim's most revered guardian spirits. The mystery revolves around discovering the identity of the traitor who turned the spirits against each other, leading to chaos and the near destruction of Eldarheim. Each chamber harbors a character who unveils a fragment of this hidden truth, urging the player to piece together the entire story.",
-  "finalPrize": "The final prize is the \"Crystal of Destiny\", a legendary artifact capable of granting the holder profound wisdom and the power to reshape their world, restoring balance to Eldarheim.",
+  "setting": "The dungeon is an ancient, sunken library lost to time, filled with whispers of forgotten knowledge and hidden truths. It is a place where books float in mid-air, ghostly lights flit about casting eerie shadows, and walls seem to reconfigure themselves. This mystical library holds secrets of the world before mankind and each chamber is filled with a singular character guarding its knowledge. The player, an intrepid scholar, must unravel the mysteries within to find the ultimate truth hidden in the depths of the library.",
+  "mystery": "The mystery revolves around the storyline that this ancient sunken library holds the secrets of humanity's future. Legends speak of a book containing this prophetic knowledge, safeguarded in the deepest chamber of the library. Each chamber unveils parts of an age-old spell designed to protect the library and the future itself. Understanding this spell is key to accessing the ultimate truth.",
+  "finalPrize": "The final prize is the 'Tome of Prophecy,' a legendary book that reveals crucial insights about humanity’s destiny and grants the reader unparalleled wisdom and foresight. It has the power to alter the course of history, allowing the player to shape the future.",
   "chambers": [
     {
-      "name": "Chamber of Echoes",
+      "name": "Chamber of Beginnings",
       "difficulty": 1,
       "character": {
-        "name": "Eldwin the Scribe",
-        "role": "An ancient historian who chronicled Eldarheim's past events",
-        "alignment": "Neutral Good",
-        "initialTrustLevel": 8,
-        "keyKnowledge": "Basic history about Eldarheim and the betrayal's ancient roots.",
-        "keyNeed": "Answer a simple question: What is Eldarheim? This acts as an introduction to test that the player understands they must interact to gain knowledge."
+        "name": "Scribe Ambrose",
+        "role": "Guardian of Introduction",
+        "alignment": "Neutral",
+        "initialTrustLevel": 9,
+        "keyKnowledge": "Ambrose provides the background about the sunken library and introduces the concept of the library's ancient spell.",
+        "keyNeed": "To obtain the key, Ambrose will ask the player to solve a simple riddle: 'I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?' (Answer: An echo.)"
       }
     },
     {
-      "name": "Chamber of Whispers",
+      "name": "Vault of Whispers",
       "difficulty": 2,
       "character": {
-        "name": "Lyra the Oracle",
-        "role": "A prophetic seer who foresaw the betrayal but was unable to act",
-        "alignment": "Chaotic Neutral",
+        "name": "Whisperer Lyra",
+        "role": "Holder of Secrets",
+        "alignment": "Neutral Good",
         "initialTrustLevel": 7,
-        "keyKnowledge": "Hints about a group of shadowy figures involved in the betrayal.",
-        "keyNeed": "Solve a riddle based on the information Eldwin provided to prove understanding of historical context."
+        "keyKnowledge": "Lyra reveals the library is protected by a multi-part spell, and each chamber unlocks part of this incantation.",
+        "keyNeed": "Lyra demands the answer to a trivia about chamber one: 'What does wind give life to without a mouth?' (Answer: An echo.)"
       }
     },
     {
-      "name": "Chamber of Shadows",
+      "name": "Hall of Reflections",
       "difficulty": 3,
       "character": {
-        "name": "Mirkon the Warden",
-        "role": "A former guardian linked to the spirits' betrayal",
-        "alignment": "Lawful Neutral",
-        "initialTrustLevel": 5,
-        "keyKnowledge": "Reveals the involvement of a mysterious artifact during the betrayal.",
-        "keyNeed": "Successfully answer trivia about the guardians to show attention to detail from previous dialogues."
+        "name": "Mirror Keeper Elias",
+        "role": "Bearer of Reflection",
+        "alignment": "Chaotic Neutral",
+        "initialTrustLevel": 6,
+        "keyKnowledge": "Elias hints at the library's many mirrored dimensions, reflecting hidden realities of human nature and choices.",
+        "keyNeed": "Elias requires the player to discover and describe a lesson learned about human nature from interacting with Lyra."
       }
     },
     {
-      "name": "Chamber of Illusions",
+      "name": "Room of Echoes",
       "difficulty": 4,
       "character": {
-        "name": "Ravenna the Illusionist",
-        "role": "Disguised as multiple personas among the traitors",
-        "alignment": "Neutral Evil",
-        "initialTrustLevel": 3,
-        "keyKnowledge": "Discloses the pressure and manipulation among the guardians leading to betrayal.",
-        "keyNeed": "Unravel a puzzle that requires recalling facts about all characters met so far."
+        "name": "Chronicle Sage Marla",
+        "role": "Chronicler of Echoes",
+        "alignment": "Lawful Neutral",
+        "initialTrustLevel": 5,
+        "keyKnowledge": "Marla confirms the echo is metaphorical for actions reverberating across time, crucial for understanding the final spell.",
+        "keyNeed": "Marla poses a memory challenge, asking the player to recount details from previous character interactions, ensuring they’ve learned the echoing theme."
       }
     },
     {
-      "name": "Chamber of Truth",
+      "name": "Chamber of Destiny",
       "difficulty": 5,
       "character": {
-        "name": "Thalion the Inquisitor",
-        "role": "The overseer of the spirits torn by the uncovering truths",
-        "alignment": "Neutral Good",
-        "initialTrustLevel": 2,
-        "keyKnowledge": "Unveils the identity of the true traitor and their motive.",
-        "keyNeed": "Enter a passcode, derived from all previous knowledge and characters' hints, to unlock the final mystery."
+        "name": "Oracle Thalion",
+        "role": "Final Protector of Destiny",
+        "alignment": "Lawful Good",
+        "initialTrustLevel": 3,
+        "keyKnowledge": "Thalion unveils the last part of the ancient spell, which is essential to access the 'Tome of Prophecy.'",
+        "keyNeed": "Thalion presents a complex logic puzzle that incorporates all previous knowledge, reflecting each character's wisdom. The player must solve it based on cumulative information gathered from earlier chambers."
       }
     }
   ]
