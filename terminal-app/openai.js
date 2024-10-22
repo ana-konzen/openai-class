@@ -49,7 +49,7 @@ export async function gptMain(type, chatParams) {
     // spinner.stop();
     if (type === "prologue") {
       console.log(
-        boxen(colors.bold("Press any key to start the game."), {
+        boxen(colors.bold("Press any key to start the game"), {
           float: "center",
           borderStyle: "none",
         })

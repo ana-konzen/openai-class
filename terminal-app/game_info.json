@@ -1,66 +1,66 @@
 {
-  "setting": "The dungeon is an ancient, sunken library lost to time, filled with whispers of forgotten knowledge and hidden truths. It is a place where books float in mid-air, ghostly lights flit about casting eerie shadows, and walls seem to reconfigure themselves. This mystical library holds secrets of the world before mankind and each chamber is filled with a singular character guarding its knowledge. The player, an intrepid scholar, must unravel the mysteries within to find the ultimate truth hidden in the depths of the library.",
-  "mystery": "The mystery revolves around the storyline that this ancient sunken library holds the secrets of humanity's future. Legends speak of a book containing this prophetic knowledge, safeguarded in the deepest chamber of the library. Each chamber unveils parts of an age-old spell designed to protect the library and the future itself. Understanding this spell is key to accessing the ultimate truth.",
-  "finalPrize": "The final prize is the 'Tome of Prophecy,' a legendary book that reveals crucial insights about humanity’s destiny and grants the reader unparalleled wisdom and foresight. It has the power to alter the course of history, allowing the player to shape the future.",
+  "setting": "In the kingdom of Eldoria, a once powerful realm now shrouded in darkness and fear, an ancient artifact known as the Celestial Crown has been stolen. The kingdom's prosperity hinged on this mystical crown, which bestowed wisdom and clarity upon its sovereign. The kingdom's brightest scholars are baffled, unable to trace the culprit or understand how they breached the heavily guarded sanctum. It is said that only a worthy adventurer can piece together the secrets hidden within the mystical Chambers of Resonance, each reflecting pieces of the truth behind the stolen artifact, and ultimately restore peace to Eldoria.",
+  "mystery": "Who has stolen the Celestial Crown from the kingdom of Eldoria and why? The thief is believed to be someone within the inner circle, but the reasons and identity remain elusive. Throughout the chambers, the player must gather information and clues to uncover the true perpetrator and the motives behind the theft. Was it greed, revenge, or something darker?",
+  "finalPrize": "The Celestial Crown and the title of Royal Protector, granting the player immense honor and a place of high regard in the royal court.",
   "chambers": [
     {
       "name": "Chamber of Beginnings",
       "difficulty": 1,
       "character": {
-        "name": "Scribe Ambrose",
-        "role": "Guardian of Introduction",
+        "name": "Ymir the Wise",
+        "role": "The king's advisor, providing initial guidance.",
         "alignment": "Neutral",
-        "initialTrustLevel": 9,
-        "keyKnowledge": "Ambrose provides the background about the sunken library and introduces the concept of the library's ancient spell.",
-        "keyNeed": "To obtain the key, Ambrose will ask the player to solve a simple riddle: 'I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?' (Answer: An echo.)"
+        "initialTrustLevel": 8,
+        "keyKnowledge": "Ymir reveals that the thief used ancient magic to bypass the guards but left a trail of mysterious runes that might provide clues.",
+        "keyNeed": "Answer a basic riddle about the history of Eldoria, testing the player's attentiveness to introductory details about the kingdom."
       }
     },
     {
-      "name": "Vault of Whispers",
+      "name": "Chamber of Echoes",
       "difficulty": 2,
       "character": {
-        "name": "Whisperer Lyra",
-        "role": "Holder of Secrets",
-        "alignment": "Neutral Good",
+        "name": "Lira the Bard",
+        "role": "Messenger and entertainer for the court.",
+        "alignment": "Good",
         "initialTrustLevel": 7,
-        "keyKnowledge": "Lyra reveals the library is protected by a multi-part spell, and each chamber unlocks part of this incantation.",
-        "keyNeed": "Lyra demands the answer to a trivia about chamber one: 'What does wind give life to without a mouth?' (Answer: An echo.)"
+        "keyKnowledge": "Lira shares that she heard distant whispers of a forgotten language tied to the kingdom's past, known only by a few in the realm.",
+        "keyNeed": "Recall the runes that Ymir mentioned and relate them to an ancient poem sung by Lira, requiring the player to connect past and present clues."
       }
     },
     {
-      "name": "Hall of Reflections",
+      "name": "Chamber of Whispers",
       "difficulty": 3,
       "character": {
-        "name": "Mirror Keeper Elias",
-        "role": "Bearer of Reflection",
-        "alignment": "Chaotic Neutral",
+        "name": "Galen the Scribe",
+        "role": "Archivist of the royal library.",
+        "alignment": "Neutral",
         "initialTrustLevel": 6,
-        "keyKnowledge": "Elias hints at the library's many mirrored dimensions, reflecting hidden realities of human nature and choices.",
-        "keyNeed": "Elias requires the player to discover and describe a lesson learned about human nature from interacting with Lyra."
+        "keyKnowledge": "Galen uncovered secret correspondence in archane script, possibly penned by a member of the inner circle with dark intentions.",
+        "keyNeed": "Decrypt a message he found using clues from Lira, testing the player's ability to piece together historical knowledge and new findings."
       }
     },
     {
-      "name": "Room of Echoes",
+      "name": "Chamber of Reflections",
       "difficulty": 4,
       "character": {
-        "name": "Chronicle Sage Marla",
-        "role": "Chronicler of Echoes",
-        "alignment": "Lawful Neutral",
+        "name": "Seraphina the Alchemist",
+        "role": "Royal alchemist, master of potions and transformations.",
+        "alignment": "Good",
         "initialTrustLevel": 5,
-        "keyKnowledge": "Marla confirms the echo is metaphorical for actions reverberating across time, crucial for understanding the final spell.",
-        "keyNeed": "Marla poses a memory challenge, asking the player to recount details from previous character interactions, ensuring they’ve learned the echoing theme."
+        "keyKnowledge": "She reveals that certain noble members exhibited strange behavior just before the incident, suggesting more than one person might be involved.",
+        "keyNeed": "Craft a potion formula from ingredients Seraphina describes, relating to motives and actions described by previous characters."
       }
     },
     {
-      "name": "Chamber of Destiny",
+      "name": "Chamber of Truths",
       "difficulty": 5,
       "character": {
-        "name": "Oracle Thalion",
-        "role": "Final Protector of Destiny",
-        "alignment": "Lawful Good",
+        "name": "Magnus the Keeper",
+        "role": "Guardian of the kingdom's deepest secrets.",
+        "alignment": "Mysterious",
         "initialTrustLevel": 3,
-        "keyKnowledge": "Thalion unveils the last part of the ancient spell, which is essential to access the 'Tome of Prophecy.'",
-        "keyNeed": "Thalion presents a complex logic puzzle that incorporates all previous knowledge, reflecting each character's wisdom. The player must solve it based on cumulative information gathered from earlier chambers."
+        "keyKnowledge": "Magnus holds the final piece of the puzzle, a cryptic prophecy that foretells the betrayal and the path to recovery of the Celestial Crown.",
+        "keyNeed": "Solve a complex philosophical puzzle that involves elements learned from all previous characters, testing the player’s comprehensive understanding and logical reasoning."
       }
     }
   ]

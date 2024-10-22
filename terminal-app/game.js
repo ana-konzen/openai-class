@@ -9,6 +9,7 @@ import { keypress } from "https://deno.land/x/cliffy@v1.0.0-rc.4/keypress/mod.ts
 import { colors } from "https://deno.land/x/cliffy@v1.0.0-rc.3/ansi/colors.ts";
 import { Input } from "https://deno.land/x/cliffy@v1.0.0-rc.4/prompt/mod.ts";
 
+// eslint-disable-next-line no-unused-vars
 import { createGame, createMessage, createDialogue, createEpilogue, createPrologue } from "./chats.js"; //ChatGPT prompts and other utility functions for the game
 
 import { splitSentences, getOverlaps } from "./util.js";
@@ -62,13 +63,14 @@ const cyan = 0x48d1cc;
 const brown = 0xed9755;
 let doorColor = brown;
 
-// const jsonStr = await Deno.readTextFile("game_info.json");
-// const gameInfo = JSON.parse(jsonStr);
+const jsonStr = await Deno.readTextFile("game_info.json");
+const gameInfo = JSON.parse(jsonStr);
 // const prologue = `${gameInfo.setting}  ${gameInfo.mystery}  ${gameInfo.finalPrize}`;
 
-const gameInfo = await createGame(numChambers);
+// const gameInfo = await createGame(numChambers);
 
 const prologue = await createPrologue(gameInfo, numChambers);
+chatHistory.push(prologue);
 const prologueSentences = splitSentences(prologue);
 
 const chambersInfo = gameInfo.chambers;
