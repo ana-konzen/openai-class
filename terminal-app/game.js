@@ -69,7 +69,7 @@ let doorColor = brown;
 const gameInfo = await createGame(numChambers);
 
 const prologue = await createPrologue(gameInfo, numChambers);
-// const prologueSentences = splitSentences(prologue);
+const prologueSentences = splitSentences(prologue);
 
 const chambersInfo = gameInfo.chambers;
 const chambers = createChambers(numChambers, chambersInfo);
