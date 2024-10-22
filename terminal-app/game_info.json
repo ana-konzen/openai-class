@@ -1,66 +1,66 @@
 {
-  "setting": "The game is set in a mystical, forgotten realm known as Eldoria, a place once bustling with the magic of ancient sorcerers, now veiled in deep shadows and mystery. The environment is characterized by dimly lit, stone-walled chambers connected like an intricate web, each one echoing with the whispers of bygone secrets. Ethereal lights flicker down long corridors, casting eerie shadows on the worn floor, while enchanted glyphs occasionally glow with a mysterious life of their own. Eldoria is a place where magic and reality coexist uneasily, and its history holds secrets that yearn to be uncovered.",
-  "mystery": "The overarching mystery revolves around the legendary 'Heart of Eldoria,' a source of unparalleled power and knowledge said to be able to control the elements themselves. Many have sought it, but none have returned. The player must unravel the truth about its origin, its current whereabouts, and how to harness or protect its immense power. The clues to the Heart's location and purpose have been scattered throughout the history of Eldoria, entrusted only to the most trusted guardians within the dungeon.",
-  "finalPrize": "The final prize is the 'Heart of Eldoria' itself, a glowing crystal pulsating with a magical aura that grants the finder immense knowledge and control over the elemental forces of nature, potentially reshaping the fate of Eldoria and its surrounding worlds.",
+  "setting": "Set in the ancient and mystical land of Eldarheim, players are drawn into a world where the boundaries between magic and reality blur. Beneath the towering peaks and lush forests lies the Crystalline Dungeon, a place of legend said to hold the powers to alter fate itself. As a chosen Seeker, the player must navigate this enigmatic place, encountering remnants of a forgotten civilization and intriguing characters who each hold a piece of a deeply woven secret.",
+  "mystery": "The player's journey begins with whispers of a betrayal that led to the downfall of Eldarheim's most revered guardian spirits. The mystery revolves around discovering the identity of the traitor who turned the spirits against each other, leading to chaos and the near destruction of Eldarheim. Each chamber harbors a character who unveils a fragment of this hidden truth, urging the player to piece together the entire story.",
+  "finalPrize": "The final prize is the \"Crystal of Destiny\", a legendary artifact capable of granting the holder profound wisdom and the power to reshape their world, restoring balance to Eldarheim.",
   "chambers": [
     {
-      "name": "The Chamber of Whispers",
+      "name": "Chamber of Echoes",
       "difficulty": 1,
       "character": {
-        "name": "Elara the Whisper",
-        "role": "A guardian of past secrets, Elara possesses the initial threads of the Heart of Eldoria's legend.",
+        "name": "Eldwin the Scribe",
+        "role": "An ancient historian who chronicled Eldarheim's past events",
         "alignment": "Neutral Good",
         "initialTrustLevel": 8,
-        "keyKnowledge": "Elara will reveal that the Heart was initially trusted to five guardians, each tasked with a different element: Fire, Water, Air, Earth, and Spirit. The key to unlocking its power lies in understanding these elements.",
-        "keyNeed": "Elara requires a simple answer: \"What are the basic elements?\" it's more of a prompt to introduce the theme, making it easy for the player to pass this trial."
+        "keyKnowledge": "Basic history about Eldarheim and the betrayal's ancient roots.",
+        "keyNeed": "Answer a simple question: What is Eldarheim? This acts as an introduction to test that the player understands they must interact to gain knowledge."
       }
     },
     {
-      "name": "The Chamber of Flames",
+      "name": "Chamber of Whispers",
       "difficulty": 2,
       "character": {
-        "name": "Pyron the Flamekeeper",
-        "role": "Guardian of the element of Fire, holding part of the Heart's secret in flames.",
+        "name": "Lyra the Oracle",
+        "role": "A prophetic seer who foresaw the betrayal but was unable to act",
         "alignment": "Chaotic Neutral",
-        "initialTrustLevel": 6,
-        "keyKnowledge": "Pyron reveals that purity and bravery are needed to harness the Heart's fire element which can launch the Heart's potential into motion.",
-        "keyNeed": "Pyron challenges the player with a riddle: \"I dance without feet, roar without a mouth, and perishing in water, I will always find my way back. What am I?\" (The answer being 'Fire')."
+        "initialTrustLevel": 7,
+        "keyKnowledge": "Hints about a group of shadowy figures involved in the betrayal.",
+        "keyNeed": "Solve a riddle based on the information Eldwin provided to prove understanding of historical context."
       }
     },
     {
-      "name": "The Chamber of Tides",
+      "name": "Chamber of Shadows",
       "difficulty": 3,
       "character": {
-        "name": "Lyra the Waterseer",
-        "role": "Guardian of the water aspect, she holds keys to the Heart’s adaptability and flow.",
+        "name": "Mirkon the Warden",
+        "role": "A former guardian linked to the spirits' betrayal",
         "alignment": "Lawful Neutral",
         "initialTrustLevel": 5,
-        "keyKnowledge": "Lyra talks about the importance of emotions, flow, and flexibility, which represent the water element crucial to maintain the Heart's balance.",
-        "keyNeed": "Lyra wants to know what Pyron said about fire. Additionally, she asks: \"What moves without seeing, howls without breathing, and gives life silently?\" (The answer being \"Water\")."
+        "keyKnowledge": "Reveals the involvement of a mysterious artifact during the betrayal.",
+        "keyNeed": "Successfully answer trivia about the guardians to show attention to detail from previous dialogues."
       }
     },
     {
-      "name": "The Chamber of Winds",
+      "name": "Chamber of Illusions",
       "difficulty": 4,
       "character": {
-        "name": "Zephyros the Windguide",
-        "role": "Guardian of the air, representing freedom and intellect in Heart's context.",
-        "alignment": "Neutral",
-        "initialTrustLevel": 4,
-        "keyKnowledge": "Zephyros emphasizes that the true strength of air lies in wisdom and freedom - aspects necessary for the Heart's complete control.",
-        "keyNeed": "Zephyros inquires about the knowledge from both Elara and Lyra, further asking a tricky question: \"I can fly without wings, cry without eyes. Whenever I go, darkness flies. What am I?\" (The answer being \"Wind\")."
+        "name": "Ravenna the Illusionist",
+        "role": "Disguised as multiple personas among the traitors",
+        "alignment": "Neutral Evil",
+        "initialTrustLevel": 3,
+        "keyKnowledge": "Discloses the pressure and manipulation among the guardians leading to betrayal.",
+        "keyNeed": "Unravel a puzzle that requires recalling facts about all characters met so far."
       }
     },
     {
-      "name": "The Chamber of Stone",
+      "name": "Chamber of Truth",
       "difficulty": 5,
       "character": {
-        "name": "Terra the Earthbound",
-        "role": "Guardian of the earth element, the final holder of the Heart's secrets related to power and resilience.",
-        "alignment": "True Neutral",
+        "name": "Thalion the Inquisitor",
+        "role": "The overseer of the spirits torn by the uncovering truths",
+        "alignment": "Neutral Good",
         "initialTrustLevel": 2,
-        "keyKnowledge": "Terra finally reveals that the Heart must be given back to the world, its power being shared rather than controlled to maintain equilibrium.",
-        "keyNeed": "Terra demands the player recount all former knowledge collected about each element: fire, water, and wind. Then, Terra presents the most difficult challenge: \"What can break without being held, sings your pain silently in the night?\" (The answer is \"Heart\")."
+        "keyKnowledge": "Unveils the identity of the true traitor and their motive.",
+        "keyNeed": "Enter a passcode, derived from all previous knowledge and characters' hints, to unlock the final mystery."
       }
     }
   ]

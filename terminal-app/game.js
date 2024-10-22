@@ -62,13 +62,13 @@ const cyan = 0x48d1cc;
 const brown = 0xed9755;
 let doorColor = brown;
 
-// const jsonStr = await Deno.readTextFile("game_info.json");
-// const gameInfo = JSON.parse(jsonStr);
-// const prologue = `${gameInfo.setting}  ${gameInfo.mystery}  ${gameInfo.finalPrize}`;
+const jsonStr = await Deno.readTextFile("game_info.json");
+const gameInfo = JSON.parse(jsonStr);
+const prologue = `${gameInfo.setting}  ${gameInfo.mystery}  ${gameInfo.finalPrize}`;
 
-const gameInfo = await createGame(numChambers);
+// const gameInfo = await createGame(numChambers);
 
-const prologue = await createPrologue(gameInfo, numChambers);
+// const prologue = await createPrologue(gameInfo, numChambers);
 const prologueSentences = splitSentences(prologue);
 
 const chambersInfo = gameInfo.chambers;

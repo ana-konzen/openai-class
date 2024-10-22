@@ -266,7 +266,7 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
     if (trust === 10) {
       summary = `${firstName}'s trust went up! The current level of trust is ${trust}. You can now give the player the key to unlock the next chamber!`;
       dialogue.trust =
-        colors.green(`${firstName}'s trust went up!`) +
+        colors.green(`${firstName}'s trust went up from 9 to 10!`) +
         colors.green("You received the key to the next chamber!");
     }
     return summary;
@@ -276,11 +276,13 @@ export async function createDialogue(chamber, messages, trust, chatHistory) {
     trust--;
     let summary = `${firstName}'s trust went down! The current level of trust is ${trust}`;
     dialogue.trust = colors.red(`${firstName}'s trust went down from ${trust + 1} to ${trust}!`);
-    if (trust <= 1) {
+    if (trust <= 1 && trust > -1) {
       summary = `${firstName}'s trust went down! The current level of trust is ${trust}. If the trust level goes below 0, the player will be kicked out of the dungeon!`;
       dialogue.trust =
-        colors.red(`${firstName}'s trust went down!`) +
+        colors.red(`${firstName}'s trust went down from ${trust + 1} to ${trust}!`) +
         colors.red("Be careful, if the trust level goes below 0, you will be kicked out of the dungeon!");
+    } else if (trust <= -1) {
+      dialogue.trust = colors.red("You were kicked out of the dungeon!");
     }
     return summary;
   }
